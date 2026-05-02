@@ -1,0 +1,3155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start2Go - Modern Tour & Travel Experiences in India</title>
+    <meta
+      name="description"
+      content="Start2Go offers curated domestic and international tour packages, luxury hotel bookings, and adventure trips across India. Your trusted travel partner for families, couples, and explorers."
+    />
+    <meta name="keywords" content="Start2Go, tour packages India, luxury travel, budget trips, international tours, hotel booking India, adventure tourism" />
+    <meta name="author" content="Start2Go" />
+    <link rel="canonical" href="https://start2go.example.com" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TravelAgency",
+        "name": "Start2Go",
+        "url": "https://start2go.example.com",
+        "description": "Tour and travel platform for exploring and booking trips across India.",
+        "areaServed": "IN",
+        "sameAs": [
+          "https://www.facebook.com",
+          "https://www.instagram.com",
+          "https://www.youtube.com"
+        ]
+      }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f4f5ff',
+                100: '#e5e7ff',
+                500: '#4f46e5',
+                600: '#4338ca',
+                700: '#3730a3'
+              },
+              accent: {
+                500: '#f97316'
+              }
+            }
+          }
+        }
+      };
+    </script>
+
+    <style>
+      /* Light mode implementation for this CDN + JSX demo.
+         Dark is the native design; light mode uses an invert strategy for consistency
+         without rewriting every Tailwind class. */
+      body.light-mode {
+        filter: invert(1) hue-rotate(180deg);
+        background: #f8fafc; /* slate-50 */
+      }
+
+      body.light-mode img,
+      body.light-mode video,
+      body.light-mode iframe {
+        filter: invert(1) hue-rotate(180deg);
+      }
+    </style>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+<!-- Dependency for the React Router UMD build -->
+<script src="https://unpkg.com/history@5/umd/history.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-router@6/umd/react-router.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-router-dom@6/umd/react-router-dom.production.min.js"></script>
+
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+
+  <body class="bg-slate-900 text-slate-50">
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="env,react">
+      const { BrowserRouter, Routes, Route, Link, NavLink, useNavigate, useLocation } = ReactRouterDOM;
+
+      /* =========================
+         Start2Go — Frontend (React + Tailwind CDN)
+         Structure:
+         - Constants (data)
+         - Utilities
+         - Hooks
+         - Layout
+         - Pages / Components
+         ========================= */
+
+      const API_BASE = '/api';
+
+      /* ---------- Demo content (kept local for simplicity) ---------- */
+      const DESTINATIONS = [
+        {
+          name: 'Goa',
+          state: 'Goa',
+          bestTime: 'November to February',
+          attractions: ['Baga & Calangute Beaches', 'Fort Aguada', 'Spice plantations'],
+          image:
+            'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Delhi',
+          state: 'Delhi',
+          bestTime: 'November to April',
+          attractions: ['Red Fort', 'India Gate', 'Qutub Minar'],
+          image:
+          'https://cdn.britannica.com/20/189820-050-D650A54D/Red-Fort-Old-Delhi-India.jpg'
+        },
+
+        {
+          name: 'Rajasthan',
+          state: 'Rajasthan',
+          bestTime: 'October to March',
+          attractions: ['Jaipur palaces', 'Thar desert', 'Udaipur lakes'],
+          image:
+            'https://2.bp.blogspot.com/-WE-yuVNLtOc/W31ON_LcSZI/AAAAAAAAAB0/6leifYJIzpEBzpmgg6_e8VIt-ZV75F3fACLcBGAs/s1600/city-palace.jpg'
+        },
+        {
+          name: 'Ooty',
+          state: 'Tamil Nadu',
+          bestTime: 'January to March',
+          attractions: ['Ooty Lake', 'Nilgiri Mountain Railway', 'Rose Garden'],
+          image:
+            'https://wanderon-images.gumlet.io/blogs/new/2025/01/21/ooty-tamil-nadu.jpg?auto=compress%2Cformat&w=1024'
+        },
+        {
+          name: 'Kerala',
+          state: 'Kerala',
+          bestTime: 'September to March',
+          attractions: ['Backwaters', 'Munnar tea gardens', 'Beaches'],
+          image:
+            'https://images.pexels.com/photos/6050623/pexels-photo-6050623.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Kashmir',
+          state: 'Jammu & Kashmir',
+          bestTime: 'March to October, December for snow',
+          attractions: ['Dal Lake', 'Gulmarg', 'Pahalgam'],
+          image:
+            'https://images.pexels.com/photos/2088166/pexels-photo-2088166.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Ladakh',
+          state: 'Ladakh',
+          bestTime: 'May to September',
+          attractions: ['Pangong Lake', 'Nubra Valley', 'Monasteries'],
+          image:
+            'https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,height=475,dpr=2/tour_img/648412de2d9fa.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Himachal Pradesh',
+          state: 'Himachal Pradesh',
+          bestTime: 'March to June, December to February',
+          attractions: ['Manali', 'Shimla', 'Dharamshala'],
+          image:
+            'https://images.pexels.com/photos/13691356/pexels-photo-13691356.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Andaman & Nicobar Islands',
+          state: 'Andaman & Nicobar',
+          bestTime: 'November to April',
+          attractions: ['Radhanagar Beach', 'Scuba diving', 'Cellular Jail'],
+          image:
+            'https://images.pexels.com/photos/13911674/pexels-photo-13911674.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Varanasi',
+          state: 'Uttar Pradesh',
+          bestTime: 'October to March',
+          attractions: ['Ganga Aarti', 'Dashashwamedh Ghat', 'Kashi Vishwanath Temple'],
+          image:
+            'https://images.pexels.com/photos/2901209/pexels-photo-2901209.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Udaipur',
+          state: 'Rajasthan',
+          bestTime: 'October to March',
+          attractions: ['Lake Pichola', 'City Palace', 'Sajjangarh (Monsoon Palace)'],
+          image:
+            'https://images.pexels.com/photos/12790310/pexels-photo-12790310.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Mumbai',
+          state: 'Maharashtra',
+          bestTime: 'November to February',
+          attractions: ['Gateway of India', 'Marine Drive', 'Elephanta Caves'],
+          image:
+            'https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        },
+        {
+          name: 'Sikkim',
+          state: 'Sikkim',
+          bestTime: 'March to June, October to December',
+          attractions: ['Gangtok', 'Tsomgo Lake', 'Nathula Pass'],
+          image:
+            'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        }
+      ];
+
+      const PACKAGES = [
+        {
+          title: 'Golden Triangle Tour (Delhi, Agra, Jaipur)',
+          price: 18999,
+          duration: '6 Days / 5 Nights',
+          facilities: ['3-star hotels', 'Daily breakfast', 'AC transport', 'City tours'],
+          rating: 4.8
+        },
+        {
+          title: 'Kerala Backwaters Tour',
+          price: 24999,
+          duration: '5 Days / 4 Nights',
+          facilities: ['Houseboat stay', 'All meals', 'Airport transfers', 'Backwater cruise'],
+          rating: 4.9
+        },
+        {
+          title: 'Kashmir Honeymoon Package',
+          price: 27999,
+          duration: '5 Days / 4 Nights',
+          facilities: ['Romantic stays', 'Breakfast & dinner', 'Shikara ride', 'Private cab'],
+          rating: 4.8
+        },
+        {
+          title: 'Goa Beach Holiday',
+          price: 15999,
+          duration: '4 Days / 3 Nights',
+          facilities: ['Beach resort', 'Breakfast', 'Airport transfers', 'Sightseeing'],
+          rating: 4.6
+        },
+        {
+          title: 'Ladakh Adventure Tour',
+          price: 32999,
+          duration: '7 Days / 6 Nights',
+          facilities: ['Mountain stays', 'Breakfast & dinner', 'Local guide', 'Permits'],
+          rating: 4.7
+        }
+      ];
+
+      const BLOG_POSTS = [
+        {
+          title: 'Best places to visit in India',
+          excerpt:
+            'Wondering where to start your Indian adventure? From golden deserts to blue oceans, here are our top picks.',
+          tags: ['Inspiration', 'Planning']
+        },
+        {
+          title: 'Top hill stations for a cool escape',
+          excerpt:
+            'Beat the heat with these hill stations—think tea gardens, pine forests, and misty sunrises.',
+          tags: ['Hill stations', 'Summer']
+        },
+        {
+          title: 'Budget travel tips for India',
+          excerpt:
+            'Travel India comfortably without overspending—from trains and homestays to street food and local markets.',
+          tags: ['Budget', 'Tips']
+        },
+        {
+          title: 'Golden Triangle itinerary (6 days)',
+          excerpt:
+            'Delhi, Agra, Jaipur—perfect for first-time India travellers. Here’s a practical 6-day plan with must-see sights.',
+          tags: ['Itinerary', 'Golden Triangle']
+        },
+        {
+          title: 'Kerala in monsoon: what to expect',
+          excerpt:
+            'Monsoon makes Kerala greener and calmer. Learn what to pack, where to stay, and the best backwater experiences.',
+          tags: ['Kerala', 'Monsoon']
+        },
+        {
+          title: 'Ladakh travel guide for beginners',
+          excerpt:
+            'Altitude tips, acclimatisation, permits, and route ideas—everything you need before your first Ladakh trip.',
+          tags: ['Ladakh', 'Adventure']
+        },
+        {
+          title: 'Top beaches beyond Goa',
+          excerpt:
+            'If you love beaches, explore Andaman, Gokarna, Varkala, and Puducherry for quieter coastal vibes.',
+          tags: ['Beaches', 'India']
+        },
+        {
+          title: 'Food trails: what to eat in each region',
+          excerpt:
+            'From Delhi street food to Kerala seafood and Rajasthan thalis—build your trip around India’s flavours.',
+          tags: ['Food', 'Culture']
+        },
+        {
+          title: 'Solo travel safety tips in India',
+          excerpt:
+            'Smart planning, common scams, transport tips, and must-have apps—travel confidently as a solo explorer.',
+          tags: ['Solo travel', 'Safety']
+        }
+      ];
+
+      /* ---------- Utilities ---------- */
+      function normalizeText(value) {
+        return (value || '').toString().toLowerCase().trim();
+      }
+
+      function matchesQuery(fields, q) {
+        const query = normalizeText(q);
+        if (!query) return true;
+        return fields.some((f) => normalizeText(f).includes(query));
+      }
+
+      function useQueryParam(name) {
+        const { search } = useLocation();
+        return React.useMemo(() => new URLSearchParams(search).get(name) || '', [search, name]);
+      }
+
+      /* ---------- Media helpers (client-side) ---------- */
+      function compressImageToDataUrl(file, { maxSize = 256, quality = 0.82 } = {}) {
+        return new Promise((resolve, reject) => {
+          if (!file) return resolve('');
+          if (!file.type || !file.type.startsWith('image/')) {
+            return reject(new Error('Please choose a valid image file.'));
+          }
+
+          const reader = new FileReader();
+          reader.onerror = () => reject(new Error('Failed to read file.'));
+          reader.onload = () => {
+            const img = new Image();
+            img.onerror = () => reject(new Error('Invalid image file.'));
+            img.onload = () => {
+              const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+              const w = Math.max(1, Math.round(img.width * scale));
+              const h = Math.max(1, Math.round(img.height * scale));
+
+              const canvas = document.createElement('canvas');
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, w, h);
+
+              const dataUrl = canvas.toDataURL('image/jpeg', quality);
+              resolve(dataUrl);
+            };
+            img.src = reader.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      /* ---------- Hooks ---------- */
+      function useTheme() {
+        const [theme, setTheme] = React.useState(() => {
+          const stored = localStorage.getItem('iit_theme');
+          if (stored === 'light' || stored === 'dark') return stored;
+          return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        });
+
+        React.useEffect(() => {
+          localStorage.setItem('iit_theme', theme);
+          document.body.classList.toggle('light-mode', theme === 'light');
+        }, [theme]);
+
+        return {
+          theme,
+          toggleTheme: () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
+        };
+      }
+
+      function useAuth() {
+        const [user, setUser] = React.useState(() => {
+          const stored = localStorage.getItem('iit_user');
+          return stored ? JSON.parse(stored) : null;
+        });
+
+        const login = (data) => {
+          localStorage.setItem('iit_token', data.token);
+          localStorage.setItem('iit_user', JSON.stringify(data.user));
+          setUser(data.user);
+        };
+
+        const logout = () => {
+          localStorage.removeItem('iit_token');
+          localStorage.removeItem('iit_user');
+          setUser(null);
+        };
+
+        return { user, login, logout };
+      }
+
+      function useApi() {
+        const token = localStorage.getItem('iit_token');
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        if (token) {
+          headers['Authorization'] = 'Bearer ' + token;
+        }
+        return async (path, options = {}) => {
+          const res = await fetch(API_BASE + path, {
+            ...options,
+            headers: {
+              ...headers,
+              ...(options.headers || {})
+            }
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(data.message || 'Request failed');
+          }
+          return data;
+        };
+      }
+
+      /* ---------- App shell / layout ---------- */
+      function Layout({ auth }) {
+        const [mobileOpen, setMobileOpen] = React.useState(false);
+        const { theme, toggleTheme } = useTheme();
+        const [profileOpen, setProfileOpen] = React.useState(false);
+        const profileMenuRef = React.useRef(null);
+
+        React.useEffect(() => {
+          if (!profileOpen) return;
+          const onMouseDown = (e) => {
+            if (!profileMenuRef.current) return;
+            if (!profileMenuRef.current.contains(e.target)) {
+              setProfileOpen(false);
+            }
+          };
+          document.addEventListener('mousedown', onMouseDown);
+          return () => document.removeEventListener('mousedown', onMouseDown);
+        }, [profileOpen]);
+
+        return (
+          <div className="min-h-screen flex flex-col">
+            <header className="fixed inset-x-0 top-0 z-30 bg-slate-900/80 backdrop-blur border-b border-slate-700">
+              <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+                <Link to="/" className="flex items-center gap-2">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-600 via-indigo-500 to-accent-500 shadow-lg shadow-primary-600/30 ring-1 ring-white/10">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-5 w-5 text-white"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 20l6.8-2.1a9.3 9.3 0 0010.9-3.2"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M4.5 13.2c2.7 1.1 6.4.7 8.9-1.1 2.6-1.8 4-4.7 3.7-7.1"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M14.2 6.2l3.4-1.2-1.2 3.4"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M7.2 9.4h.01M10.2 9.4h.01"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+                  <div className="flex flex-col leading-tight">
+                    <span className="font-semibold text-sm sm:text-base">Start2Go</span>
+                    <span className="text-xs text-slate-400 hidden sm:block">Explore. Book. Share.</span>
+                  </div>
+                </Link>
+
+                <div className="hidden md:flex items-center gap-6 text-sm">
+                  <NavLink
+                    to="/"
+                    end
+                    className={({ isActive }) =>
+                      (isActive ? 'text-accent-500' : 'text-slate-200 hover:text-white') + ' font-medium'
+                    }
+                  >
+                    Home
+                  </NavLink>
+                  <NavLink
+                    to="/services"
+                    className={({ isActive }) =>
+                      (isActive ? 'text-accent-500' : 'text-slate-200 hover:text-white') + ' font-medium'
+                    }
+                  >
+                    Services
+                  </NavLink>
+                  <NavLink
+                    to="/destinations"
+                    className={({ isActive }) =>
+                      (isActive ? 'text-accent-500' : 'text-slate-200 hover:text-white') + ' font-medium'
+                    }
+                  >
+                    Destinations
+                  </NavLink>
+                  <NavLink
+                    to="/packages"
+                    className={({ isActive }) =>
+                      (isActive ? 'text-accent-500' : 'text-slate-200 hover:text-white') + ' font-medium'
+                    }
+                  >
+                    Packages
+                  </NavLink>
+                  <NavLink
+                    to="/about"
+                    className={({ isActive }) =>
+                      (isActive ? 'text-accent-500' : 'text-slate-200 hover:text-white') + ' font-medium'
+                    }
+                  >
+                    About Us
+                  </NavLink>
+                  <NavLink
+                    to="/contact"
+                    className={({ isActive }) =>
+                      (isActive ? 'text-accent-500' : 'text-slate-200 hover:text-white') + ' font-medium'
+                    }
+                  >
+                    Contact
+                  </NavLink>
+                </div>
+
+                <div className="hidden md:flex items-center gap-3">
+                  {auth.user ? (
+                    <div className="relative" ref={profileMenuRef}>
+                      <button
+                        onClick={() => setProfileOpen((v) => !v)}
+                        className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950/20 px-2 py-1 hover:border-accent-500 transition"
+                        aria-label="Open profile menu"
+                      >
+                        <span className="h-8 w-8 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center text-xs font-semibold text-slate-100">
+                          {auth.user.profilePhotoUrl ? (
+                            <img
+                              src={auth.user.profilePhotoUrl}
+                              alt={auth.user.name}
+                              className="h-full w-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span>{auth.user.name?.charAt(0) || 'U'}</span>
+                          )}
+                        </span>
+                        <span className="text-xs text-slate-200 max-w-[140px] truncate">{auth.user.name}</span>
+                        <span className="text-slate-400 text-xs">▾</span>
+                      </button>
+
+                      {profileOpen && (
+                        <div
+                          className="absolute right-0 mt-2 w-48 rounded-2xl border border-slate-800 bg-slate-950/95 backdrop-blur shadow-lg shadow-slate-950/60 overflow-hidden"
+                          role="menu"
+                        >
+                          <Link
+                            to="/dashboard"
+                            className="block px-4 py-2.5 text-xs text-slate-200 hover:bg-slate-900"
+                            onClick={() => setProfileOpen(false)}
+                            role="menuitem"
+                          >
+                            Profile & Dashboard
+                          </Link>
+                          <button
+                            onClick={() => {
+                              toggleTheme();
+                              setProfileOpen(false);
+                            }}
+                            className="w-full text-left px-4 py-2.5 text-xs text-slate-200 hover:bg-slate-900"
+                            role="menuitem"
+                          >
+                            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                          </button>
+                          <button
+                            onClick={() => {
+                              auth.logout();
+                              setProfileOpen(false);
+                            }}
+                            className="w-full text-left px-4 py-2.5 text-xs text-rose-300 hover:bg-slate-900"
+                            role="menuitem"
+                          >
+                            Logout
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        onClick={toggleTheme}
+                        className="text-xs px-3 py-1 rounded-full border border-slate-600 hover:border-accent-500 hover:text-accent-500 transition inline-flex items-center gap-2"
+                        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                        title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                      >
+                        {theme === 'dark' ? (
+                          <>
+                            <span>☀</span>
+                            <span className="hidden sm:inline">Light</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>🌙</span>
+                            <span className="hidden sm:inline">Dark</span>
+                          </>
+                        )}
+                      </button>
+                      <Link
+                        to="/login"
+                        className="text-xs px-3 py-1 rounded-full border border-slate-700 hover:border-accent-500 hover:text-accent-500 transition"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/signup"
+                        className="text-xs px-3 py-1 rounded-full bg-accent-500 text-slate-950 hover:bg-accent-500/90 transition"
+                      >
+                        Sign up
+                      </Link>
+                    </>
+                  )}
+                </div>
+
+                <button
+                  className="md:hidden inline-flex items-center justify-center rounded-md border border-slate-700 p-1.5 text-slate-200"
+                  onClick={() => setMobileOpen((v) => !v)}
+                  aria-label="Toggle navigation"
+                >
+                  <span className="sr-only">Open menu</span>
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M4 6h16M4 12h16M4 18h16"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </nav>
+
+              {mobileOpen && (
+                <div className="md:hidden border-t border-slate-700 bg-slate-900/95">
+                  <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-3 text-sm">
+                    <NavLink onClick={() => setMobileOpen(false)} to="/" end className="text-slate-200">
+                      Home
+                    </NavLink>
+                    <NavLink onClick={() => setMobileOpen(false)} to="/services" className="text-slate-200">
+                      Services
+                    </NavLink>
+                    <NavLink onClick={() => setMobileOpen(false)} to="/destinations" className="text-slate-200">
+                      Destinations
+                    </NavLink>
+                    <NavLink onClick={() => setMobileOpen(false)} to="/packages" className="text-slate-200">
+                      Packages
+                    </NavLink>
+                    <NavLink onClick={() => setMobileOpen(false)} to="/about" className="text-slate-200">
+                      About Us
+                    </NavLink>
+                    <NavLink onClick={() => setMobileOpen(false)} to="/contact" className="text-slate-200">
+                      Contact
+                    </NavLink>
+                    {auth.user && (
+                      <NavLink onClick={() => setMobileOpen(false)} to="/dashboard" className="text-slate-200">
+                        Dashboard
+                      </NavLink>
+                    )}
+                    <div className="pt-2 border-t border-slate-800 flex gap-2">
+                      {auth.user ? (
+                        <>
+                          <div className="flex items-center gap-2 px-2 py-1 rounded-full border border-slate-700">
+                            <span className="h-7 w-7 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center text-xs font-semibold text-slate-100">
+                              {auth.user.profilePhotoUrl ? (
+                                <img
+                                  src={auth.user.profilePhotoUrl}
+                                  alt={auth.user.name}
+                                  className="h-full w-full object-cover"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <span>{auth.user.name?.charAt(0) || 'U'}</span>
+                              )}
+                            </span>
+                            <span className="text-xs text-slate-200 max-w-[130px] truncate">{auth.user.name}</span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              toggleTheme();
+                            }}
+                            className="text-xs px-3 py-1 rounded-full border border-slate-600 hover:border-accent-500 hover:text-accent-500 transition"
+                            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                          >
+                            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                          </button>
+                          <button
+                            onClick={() => {
+                              auth.logout();
+                              setMobileOpen(false);
+                            }}
+                            className="text-xs px-3 py-1 rounded-full border border-slate-600 hover:border-rose-400 hover:text-rose-300 transition"
+                          >
+                            Logout
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => {
+                              toggleTheme();
+                            }}
+                            className="text-xs px-3 py-1 rounded-full border border-slate-600 hover:border-accent-500 hover:text-accent-500 transition"
+                            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                          >
+                            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                          </button>
+                          <Link
+                            to="/login"
+                            onClick={() => setMobileOpen(false)}
+                        className="text-xs px-3 py-1 rounded-full border border-slate-600 hover:border-accent-500 hover:text-accent-500 transition"
+                          >
+                            Login
+                          </Link>
+                          <Link
+                            to="/signup"
+                            onClick={() => setMobileOpen(false)}
+                            className="text-xs px-3 py-1 rounded-full bg-accent-500 text-slate-950 hover:bg-accent-500/90 transition"
+                          >
+                            Sign up
+                          </Link>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </header>
+
+            <main className="flex-1 pt-20 pb-16">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/search" element={<SearchResults />} />
+                <Route path="/destinations" element={<Destinations />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route path="/stories" element={<Stories />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/login" element={<Login auth={auth} />} />
+                <Route path="/signup" element={<Signup auth={auth} />} />
+                <Route path="/dashboard" element={<Dashboard auth={auth} />} />
+              </Routes>
+            </main>
+
+            <Footer />
+
+            <a
+              href="https://wa.me/918109061426"
+              target="_blank"
+              rel="noopener"
+              className="fixed bottom-5 right-5 inline-flex items-center justify-center rounded-full bg-green-500 text-white h-12 w-12 shadow-lg shadow-green-500/40 hover:bg-green-600 transition"
+              aria-label="Chat on WhatsApp"
+            >
+              <svg viewBox="0 0 32 32" className="h-6 w-6" fill="currentColor">
+                <path
+                  d="M16 3C9.373 3 4 8.373 4 15c0 2.64.879 5.081 2.364 7.067L5 29l7.134-1.345A11.93 11.93 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 2c5.514 0 10 4.486 10 10s-4.486 10-10 10a9.93 9.93 0 0 1-4.814-1.262l-.344-.194-4.072.767.777-3.975-.223-.348A9.93 9.93 0 0 1 6 15c0-5.514 4.486-10 10-10zm-3.285 5c-.235 0-.642.093-.977.466-.335.373-1.279 1.247-1.279 3.04 0 1.793 1.309 3.526 1.492 3.771.183.245 2.538 4.063 6.252 5.531 3.086 1.212 3.713.971 4.384.909.671-.062 2.163-.885 2.47-1.739.307-.854.307-1.586.215-1.739-.092-.153-.335-.245-.7-.429-.365-.184-2.163-1.069-2.499-1.191-.335-.123-.58-.184-.824.184-.245.368-.946 1.191-1.16 1.437-.214.245-.428.276-.793.092-.365-.184-1.541-.567-2.936-1.809-1.086-.97-1.818-2.168-2.032-2.536-.214-.368-.023-.567.161-.75.166-.165.368-.429.552-.644.184-.215.245-.368.368-.613.123-.245.062-.46-.03-.644-.092-.184-.793-1.947-1.086-2.664-.286-.688-.581-.595-.816-.603z"
+                />
+              </svg>
+            </a>
+          </div>
+        );
+      }
+
+      /* ---------- Page Components ---------- */
+      function About() {
+        return (
+          <section className="py-12 sm:py-16 bg-slate-950">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h1 className="text-3xl sm:text-4xl font-bold text-white mb-6">About Start2Go</h1>
+              <p className="text-lg text-slate-300 mb-8 leading-relaxed">
+                At <span className="text-accent-500 font-semibold">Start2Go</span>, we believe that travel is more than just visiting a new place—it's about the stories you bring back. Founded with a passion for discovery, we specialize in crafting unique travel experiences across the diverse landscapes of India.
+              </p>
+              
+              <div className="grid sm:grid-cols-2 gap-8 mb-12">
+                <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+                  <h2 className="text-xl font-semibold text-white mb-3">Our Mission</h2>
+                  <p className="text-sm text-slate-400">
+                    To simplify travel planning and provide unforgettable, high-quality experiences that connect people with the rich heritage and beauty of India.
+                  </p>
+                </div>
+                <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+                  <h2 className="text-xl font-semibold text-white mb-3">Our Vision</h2>
+                  <p className="text-sm text-slate-400">
+                    To become India's most trusted travel partner, known for personalized service, transparency, and sustainable tourism.
+                  </p>
+                </div>
+              </div>
+
+              <h2 className="text-2xl font-bold text-white mb-6 text-center">Why Choose Us?</h2>
+              <div className="grid sm:grid-cols-3 gap-6">
+                {[
+                  { title: 'Local Experts', desc: 'Our team knows every hidden gem in India.' },
+                  { title: 'Best Pricing', desc: 'Quality trips that fit your budget perfectly.' },
+                  { title: '24/7 Support', desc: 'We are with you at every step of your journey.' }
+                ].map((item, idx) => (
+                  <div key={idx} className="text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary-600/20 text-primary-500 flex items-center justify-center mx-auto mb-3">
+                      <span className="text-xl">✓</span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-white mb-1">{item.title}</h3>
+                    <p className="text-xs text-slate-400">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function Services() {
+        const api = useApi();
+        const [hotels, setHotels] = React.useState([]);
+        const [vehicles, setVehicles] = React.useState([]);
+        const [activeSection, setActiveSection] = React.useState('overview');
+
+        React.useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const [hData, vData] = await Promise.all([
+                api('/hotels'),
+                api('/vehicles')
+              ]);
+              setHotels(hData);
+              setVehicles(vData);
+            } catch (err) {
+              console.error('Error fetching services data:', err);
+            }
+          };
+          fetchData();
+        }, []);
+
+        React.useEffect(() => {
+          const hash = window.location.hash.replace('#', '');
+          if (hash) {
+            const sectionMap = {
+              'hotels-service': 'hotels',
+              'transport-service': 'transport',
+              'guides-service': 'guides',
+              'custom-service': 'custom'
+            };
+            if (sectionMap[hash]) {
+              setActiveSection(sectionMap[hash]);
+            }
+          }
+        }, []);
+
+        const services = [
+          { id: 'hotels', title: 'Hotel Booking', desc: 'Curated stays from budget to luxury.', icon: '🏨' },
+          { id: 'transport', title: 'Transport', desc: 'Safe travel with Rapido & Private Cabs.', icon: '🚗' },
+          { id: 'guides', title: 'Tour Guide', desc: 'Professional local experts.', icon: '🗺️' },
+          { id: 'custom', title: 'Custom Packages', desc: 'Tailor-made itineraries.', icon: '✨' }
+        ];
+
+        return (
+          <section className="py-12 sm:py-16 bg-slate-950 min-h-screen">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Our Services</h1>
+                <p className="text-slate-400 max-w-2xl mx-auto">
+                  End-to-end functional travel solutions for a hassle-free journey.
+                </p>
+              </div>
+
+              {/* Service Cards */}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                {services.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setActiveSection(s.id)}
+                    className={`p-8 rounded-3xl border transition text-center flex flex-col items-center ${
+                      activeSection === s.id 
+                      ? 'bg-primary-600/20 border-primary-500 shadow-lg shadow-primary-600/20' 
+                      : 'bg-slate-900/50 border-slate-800 hover:border-slate-600'
+                    }`}
+                  >
+                    <div className="text-4xl mb-4">{s.icon}</div>
+                    <h3 className="text-lg font-semibold text-white mb-2">{s.title}</h3>
+                    <p className="text-xs text-slate-400 leading-relaxed">{s.desc}</p>
+                  </button>
+                ))}
+              </div>
+
+              {/* Dynamic Content Sections */}
+              <div className="space-y-20">
+                
+                {/* Hotels Section */}
+                {(activeSection === 'overview' || activeSection === 'hotels') && (
+                  <div id="hotels-service" className="scroll-mt-24">
+                    <div className="flex items-center justify-between mb-8 border-b border-slate-800 pb-4">
+                      <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                        <span>🏨</span> Hotel Stays
+                      </h2>
+                      <Link to="/packages" className="text-xs text-accent-500 hover:underline">Book via Package →</Link>
+                    </div>
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {hotels.length > 0 ? (
+                        hotels.map(h => (
+                          <div key={h._id} className="rounded-2xl border border-slate-800 bg-slate-900/40 overflow-hidden group">
+                            <img src={h.imageUrl} alt={h.name} className="h-40 w-full object-cover group-hover:scale-105 transition-transform" />
+                            <div className="p-5">
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="font-bold text-white">{h.name}</h3>
+                                <span className="text-xs text-amber-400">★ {h.rating}</span>
+                              </div>
+                              <p className="text-[10px] text-slate-400 mb-4">{h.location} • {h.description}</p>
+                              <div className="space-y-2">
+                                {h.roomTypes?.map(rt => (
+                                  <div key={rt.name} className="flex justify-between items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
+                                    <span className="text-[10px] text-slate-300">{rt.name}</span>
+                                    <span className="text-[10px] font-bold text-accent-500">₹{h.pricePerNight + rt.additionalCost}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              <a 
+                                href={h.website || '#booking-section'} 
+                                target={h.website ? '_blank' : undefined}
+                                rel={h.website ? 'noopener noreferrer' : undefined} 
+                                onClick={h.website ? undefined : () => document.getElementById('booking-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="mt-4 w-full py-2 bg-accent-500 text-slate-950 font-bold rounded-lg hover:bg-accent-400 transition text-center text-xs"
+                              >
+                                {h.website ? 'Book Now' : 'Book via Start2Go'}
+                              </a>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="col-span-full text-center py-10">
+                          <p className="text-slate-500 italic">Fetching hotels from our travel network...</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Transport Section */}
+                {(activeSection === 'overview' || activeSection === 'transport') && (
+                  <div id="transport-service" className="scroll-mt-24">
+                    <div className="flex items-center justify-between mb-8 border-b border-slate-800 pb-4">
+                      <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                        <span>🚗</span> Transport & Rentals
+                      </h2>
+                    </div>
+                    <div className="grid lg:grid-cols-3 gap-8">
+                      {/* Rapido Integration Card */}
+                      <div className="lg:col-span-1 p-8 rounded-3xl bg-gradient-to-br from-yellow-400/10 to-yellow-600/5 border border-yellow-500/30 flex flex-col items-center text-center">
+                        <div className="h-16 w-16 bg-yellow-500 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-yellow-500/20">
+                          <span className="text-3xl">🏍️</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Instant Bike/Auto Taxi</h3>
+                        <p className="text-xs text-slate-400 mb-6">Connect with Rapido for quick local transfers and city travel.</p>
+                        <a 
+                          href="https://www.rapido.bike/" 
+                          target="_blank" 
+                          className="w-full py-3 bg-yellow-500 text-slate-900 font-bold rounded-xl hover:bg-yellow-400 transition flex items-center justify-center gap-2"
+                        >
+                          Book with Rapido <span>↗</span>
+                        </a>
+                      </div>
+
+                      {/* Private Vehicles Grid */}
+                      <div className="lg:col-span-2 grid sm:grid-cols-2 gap-4">
+                        {vehicles.map(v => (
+                          <div key={v._id} className="p-4 rounded-2xl border border-slate-800 bg-slate-900/40 flex gap-4 items-center">
+                            <div className="h-16 w-16 rounded-xl bg-slate-800 overflow-hidden flex-shrink-0">
+                              <img src={v.imageUrl} alt={v.name} className="h-full w-full object-cover" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="text-sm font-bold text-white">{v.name}</h4>
+                              <p className="text-[10px] text-slate-400">{v.type} • {v.capacity} Seats</p>
+                              <p className="text-[10px] text-accent-500 font-bold mt-1">₹{v.basePrice} Base Price</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Guides Section */}
+                {(activeSection === 'overview' || activeSection === 'guides') && (
+                  <div id="guides-service" className="scroll-mt-24 p-8 rounded-3xl border border-slate-800 bg-slate-900/20 text-center">
+                    <div className="text-4xl mb-4">🗺️</div>
+                    <h2 className="text-2xl font-bold text-white mb-2">Hire a Local Expert</h2>
+                    <p className="text-sm text-slate-400 mb-6 max-w-lg mx-auto">Get connected with certified local guides who speak your language and know the best hidden spots.</p>
+                    <button onClick={() => setActiveSection('custom')} className="px-6 py-2 rounded-full bg-primary-600 text-white text-xs font-semibold hover:bg-primary-700 transition">Request a Guide</button>
+                  </div>
+                )}
+
+                {/* Custom Packages Form */}
+                {(activeSection === 'overview' || activeSection === 'custom') && (
+                  <div id="custom-service" className="scroll-mt-24">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                      <div>
+                        <h2 className="text-3xl font-bold text-white mb-4">Didn&apos;t find what you need?</h2>
+                        <p className="text-slate-400 mb-6">Tell us your dream destination, budget, and interests. We will create a completely personalized itinerary just for you.</p>
+                        <ul className="space-y-3">
+                          {['Custom Route Selection', 'Specific Hotel Preferences', 'Special Occasion Planning', 'Group Discounts'].map(item => (
+                            <li key={item} className="flex items-center gap-3 text-xs text-slate-300">
+                              <span className="text-green-500">✓</span> {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="p-8 rounded-3xl border border-slate-800 bg-slate-900/50">
+                        <h3 className="text-lg font-bold text-white mb-4 text-center">Request Custom Package</h3>
+                        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert('Your request has been received!'); }}>
+                          <input required className="w-full rounded-xl bg-slate-950 border-slate-700 text-xs" placeholder="Full Name" />
+                          <input required type="email" className="w-full rounded-xl bg-slate-950 border-slate-700 text-xs" placeholder="Email Address" />
+                          <textarea required rows="3" className="w-full rounded-xl bg-slate-950 border-slate-700 text-xs" placeholder="Describe your dream trip..."></textarea>
+                          <button type="submit" className="w-full py-3 bg-accent-500 text-slate-950 font-bold rounded-xl hover:bg-accent-400 transition text-sm">Send Request</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function Contact() {
+        const api = useApi();
+        const [status, setStatus] = React.useState('');
+        
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          setStatus('Sending message...');
+          
+          const formData = new FormData(e.target);
+          const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message')
+          };
+          
+          try {
+            await api('/contact', {
+              method: 'POST',
+              body: JSON.stringify(data)
+            });
+            setStatus('Message sent successfully! We will get back to you soon.');
+            e.target.reset();
+          } catch (err) {
+            setStatus(err.message || 'Failed to send message. Please try again.');
+          }
+        };
+
+        return (
+          <section className="py-12 sm:py-16 bg-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid lg:grid-cols-2 gap-12">
+                <div>
+                  <h1 className="text-3xl sm:text-4xl font-bold text-white mb-6">Get in Touch</h1>
+                  <p className="text-slate-300 mb-8">
+                    Have questions about a package or need a custom package? Our travel experts are just a message away.
+                  </p>
+                  
+                  <div className="space-y-6">
+                    <div className="flex items-start gap-4">
+                      <div className="text-2xl text-accent-500">📞</div>
+                      <div>
+                        <p className="text-sm font-semibold text-white">Call Us</p>
+                        <p className="text-sm text-slate-400">+91 81090 61426</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="text-2xl text-accent-500">✉️</div>
+                      <div>
+                        <p className="text-sm font-semibold text-white">Email</p>
+                        <p className="text-sm text-slate-400">hellostart2go@gmail.com</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="text-2xl text-accent-500">📍</div>
+                      <div>
+                        <p className="text-sm font-semibold text-white">Address</p>
+                        <p className="text-sm text-slate-400">Maharajpur, Madhya Pradesh</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl">
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1">Your Name</label>
+                        <input name="name" required className="w-full rounded-xl bg-slate-950 border-slate-700 text-sm" placeholder="John Doe" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+                        <input name="email" type="email" required className="w-full rounded-xl bg-slate-950 border-slate-700 text-sm" placeholder="john@example.com" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">Subject</label>
+                      <input name="subject" required className="w-full rounded-xl bg-slate-950 border-slate-700 text-sm" placeholder="How can we help?" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1">Message</label>
+                      <textarea name="message" required rows="4" className="w-full rounded-xl bg-slate-950 border-slate-700 text-sm" placeholder="Tell us about your travel plans..."></textarea>
+                    </div>
+                    <button type="submit" className="w-full py-3 bg-accent-500 text-slate-950 font-bold rounded-xl hover:bg-accent-500/90 transition">
+                      Send Message
+                    </button>
+                    {status && <p className="text-xs text-center text-green-400 mt-2">{status}</p>}
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      /* ---------- Home page sections ---------- */
+      function Hero() {
+        const navigate = useNavigate();
+        const [query, setQuery] = React.useState('');
+        const trimmed = query.trim();
+
+        return (
+          <section className="relative overflow-hidden">
+            <div className="absolute inset-0">
+              <img
+                src="https://i.pinimg.com/originals/70/50/93/70509313737b6e9fab9af6c233ebebc4.png"
+                alt="Incredible India landscape"
+                className="h-full w-full object-cover opacity-70"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-900"></div>
+            </div>
+
+            <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-28 flex flex-col lg:flex-row items-center gap-10">
+              <div className="max-w-xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-accent-500 mb-3">
+                  Start2Go
+                </p>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-4">
+                  Discover India&apos;s most breathtaking journeys.
+                </h1>
+                <p className="text-sm sm:text-base text-slate-200 mb-6">
+                  Explore curated tour packages, unforgettable destinations, and real travel stories from explorers like
+                  you. Plan your next escape to the mountains, beaches, deserts, and backwaters of Incredible India.
+                </p>
+
+                <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-3 sm:p-4 shadow-lg shadow-slate-900/60 backdrop-blur mb-5">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+                    }}
+                    className="flex flex-col sm:flex-row gap-3"
+                  >
+                    <div className="relative w-full">
+                      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
+                        ⌕
+                      </span>
+                      <input
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Search destinations or packages (e.g. Goa, Ladakh, Kerala)"
+                        className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500 pl-9 pr-10"
+                        aria-label="Search destinations or packages"
+                      />
+                      {query.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setQuery('')}
+                          className="absolute inset-y-0 right-2 my-auto h-7 w-7 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition"
+                          aria-label="Clear search"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </div>
+                    <button
+                      type="submit"
+                      className="inline-flex justify-center items-center rounded-xl bg-accent-500 text-slate-950 text-sm font-semibold px-4 py-2.5 hover:bg-accent-500/90 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                      disabled={!trimmed}
+                      title={!trimmed ? 'Type something to search' : 'Search'}
+                    >
+                      Search
+                    </button>
+                  </form>
+                  <p className="mt-2 text-[11px] text-slate-400">
+                    Popular: Goa · Rajasthan · Kerala · Kashmir · Ladakh
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => navigate('/packages')}
+                    className="inline-flex items-center gap-2 rounded-full bg-primary-600 px-4 py-2 text-xs sm:text-sm font-semibold shadow-lg shadow-primary-600/40 hover:bg-primary-700 transition"
+                  >
+                    Browse tour packages
+                    <span aria-hidden="true">→</span>
+                  </button>
+                  <button
+                    onClick={() => navigate('/stories')}
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-950/40 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-100 hover:border-accent-500 hover:text-accent-500 transition"
+                  >
+                    Read travel stories
+                  </button>
+                </div>
+
+                <div className="mt-6 flex items-center gap-4 text-[11px] text-slate-300">
+                  <div className="flex -space-x-2">
+                    <span className="h-7 w-7 rounded-full bg-[url('https://images.pexels.com/photos/3861482/pexels-photo-3861482.jpeg?auto=compress&cs=tinysrgb&w=200')] bg-cover border border-slate-900" />
+                    <span className="h-7 w-7 rounded-full bg-[url('https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=200')] bg-cover border border-slate-900" />
+                    <span className="h-7 w-7 rounded-full bg-[url('https://images.pexels.com/photos/1446944/pexels-photo-1446944.jpeg?auto=compress&cs=tinysrgb&w=200')] bg-cover border border-slate-900" />
+                  </div>
+                  <span>Trusted by 10k+ travellers exploring India</span>
+                </div>
+              </div>
+
+              <div className="w-full max-w-md">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2 rounded-3xl overflow-hidden border border-slate-700 shadow-lg shadow-slate-900/60">
+                    <img
+                      src="https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=535,height=400,dpr=2/tour_img/bd7fa39e6e2d7f81.jpeg" 
+                      alt="Taj Mahal, Agra"
+                      className="h-44 w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="row-span-2 rounded-3xl overflow-hidden border border-slate-700 shadow-lg shadow-slate-900/60">
+                    <img
+                      src="https://images.pexels.com/photos/2087391/pexels-photo-2087391.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                      alt="Houseboats in Kerala backwaters"
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="rounded-3xl overflow-hidden border border-slate-700 shadow-lg shadow-slate-900/60">
+                    <img
+                      src="https://images.pexels.com/photos/4603761/pexels-photo-4603761.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                      alt="Desert safari in Rajasthan"
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="rounded-3xl overflow-hidden border border-slate-700 shadow-lg shadow-slate-900/60">
+                    <img
+                      src="https://tse3.mm.bing.net/th/id/OIP.rMs3Ve3N50uI1sa1rkVREwHaE7?rs=1&pid=ImgDetMain&o=7&rm=3"
+                      alt="Snow-capped mountains in Ladakh"
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function FeaturedPackages() {
+        const api = useApi();
+        const [packages, setPackages] = React.useState([]);
+
+        React.useEffect(() => {
+          (async () => {
+            try {
+              const data = await api('/packages');
+              setPackages(data.slice(0, 3));
+            } catch (err) {
+              console.error(err);
+            }
+          })();
+        }, []);
+
+        return (
+          <section className="py-10 sm:py-12 lg:py-14 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-semibold text-white">Featured tour packages</h2>
+                  <p className="mt-1 text-sm text-slate-300">
+                    Handpicked experiences that showcase the diversity of India.
+                  </p>
+                </div>
+                <Link
+                  to="/packages"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-accent-500 hover:text-accent-400"
+                >
+                  View all packages
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {packages.map((pkg) => (
+                  <article
+                    key={pkg._id}
+                    className="group rounded-2xl border border-slate-800 bg-slate-950/60 shadow-lg hover:border-accent-500/50 transition-all flex flex-col"
+                  >
+                    <div className="relative h-40 overflow-hidden rounded-t-2xl">
+                      <img
+                        src={pkg.imageUrl || 'https://images.pexels.com/photos/4603763/pexels-photo-4603763.jpeg?auto=compress&cs=tinysrgb&w=1200'}
+                        alt={pkg.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent" />
+                      <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                        <span className="inline-flex items-center rounded-lg bg-slate-900/90 px-2 py-0.5 text-[10px] text-slate-100 border border-slate-700">
+                          {pkg.duration}
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-lg bg-amber-500/90 px-2 py-0.5 text-[10px] text-slate-950 font-bold">
+                          ★ {(pkg.rating || 4.5).toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex-1 p-5 flex flex-col">
+                      <h3 className="text-sm font-bold text-white mb-2 leading-tight">{pkg.title}</h3>
+                      <p className="text-xs text-slate-400 mb-4 line-clamp-2">{pkg.description}</p>
+                      <div className="mt-auto flex items-center justify-between">
+                        <div className="text-xs text-slate-200">
+                          From{' '}
+                          <span className="text-accent-500 text-sm font-bold">
+                            ₹{pkg.price.toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                        <Link
+                          to="/packages"
+                          className="inline-flex items-center rounded-xl bg-primary-600 px-4 py-2 text-xs font-semibold text-slate-50 hover:bg-primary-700 transition shadow-lg shadow-primary-600/20"
+                        >
+                          Book Now
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function DestinationsGrid() {
+        const destinations = DESTINATIONS;
+
+        return (
+          <section className="py-10 sm:py-12 bg-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-semibold text-white">Popular destinations in India</h2>
+                  <p className="mt-1 text-sm text-slate-300">
+                    Beaches, mountains, deserts, and islands—all in one country.
+                  </p>
+                </div>
+                <Link
+                  to="/destinations"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-accent-500 hover:text-accent-400"
+                >
+                  Explore all destinations
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {destinations.map((d) => (
+                  <article
+                    key={d.name}
+                    className="group rounded-2xl border border-slate-800 bg-slate-950/60 shadow-lg shadow-slate-950/50 overflow-hidden"
+                  >
+                    <div className="relative h-40 overflow-hidden">
+                      <img
+                        src={d.image}
+                        alt={d.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent" />
+                      <div className="absolute bottom-3 left-3">
+                        <h3 className="text-sm font-semibold text-white">{d.name}</h3>
+                        <p className="text-[11px] text-slate-200">{d.state}</p>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <p className="text-xs text-slate-300 mb-2">
+                        <span className="font-semibold text-slate-100">Best time:</span> {d.bestTime}
+                      </p>
+                      <p className="text-xs text-slate-300 mb-2">Top attractions:</p>
+                      <ul className="flex flex-wrap gap-1">
+                        {d.attractions.map((a) => (
+                          <li
+                            key={a}
+                            className="inline-flex items-center rounded-full bg-slate-900 px-2 py-0.5 text-[11px] text-slate-200"
+                          >
+                            {a}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function Testimonials() {
+        const testimonials = [
+          {
+            name: 'Rahul & Friends',
+            text: 'Ladakh was a dream. Start2Go took care of permits, guides, and stays so we could just enjoy.',
+            trip: 'Ladakh Adventure Tour'
+          },
+          {
+            name: 'Ananya Sharma',
+            text: 'Our Kashmir honeymoon was perfectly planned. The stays, transport, and local experiences were seamless.',
+            trip: 'Kashmir Honeymoon Package'
+          },
+          {
+            name: 'Sagar',
+            text: 'The Kerala backwaters felt like another world. Loved the houseboat and the peaceful evenings on the lake.',
+            trip: 'Kerala Backwaters Tour'
+          }
+        ];
+
+        return (
+          <section className="py-10 sm:py-12 bg-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-semibold text-white">What travellers are saying</h2>
+                  <p className="mt-1 text-sm text-slate-300">
+                    Real stories from people who explored India with us.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-3">
+                {testimonials.map((t) => (
+                  <figure
+                    key={t.name}
+                    className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/50"
+                  >
+                    <p className="text-xs text-slate-200 mb-3">&ldquo;{t.text}&rdquo;</p>
+                    <figcaption className="text-xs text-slate-300">
+                      <span className="font-semibold text-slate-100">{t.name}</span>
+                      <span className="block text-[11px] text-slate-400">{t.trip}</span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function Newsletter() {
+        return (
+          <section className="py-10 sm:py-12 bg-gradient-to-r from-primary-700/40 via-slate-950 to-amber-600/20 border-y border-slate-800">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid gap-6 lg:grid-cols-2 items-center">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-semibold text-white">Stay in the loop</h2>
+                  <p className="mt-1 text-sm text-slate-200">
+                    Get handpicked itineraries, insider travel tips, and seasonal deals for exploring India—straight to
+                    your inbox.
+                  </p>
+                </div>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget;
+                    form.reset();
+                    alert('Thanks for subscribing to Start2Go!');
+                  }}
+                  className="flex flex-col sm:flex-row gap-3"
+                >
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter your email address"
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                    aria-label="Email address"
+                  />
+                  <button
+                    type="submit"
+                    className="inline-flex justify-center items-center rounded-xl bg-accent-500 text-slate-950 text-sm font-semibold px-4 py-2.5 hover:bg-accent-500/90 transition whitespace-nowrap"
+                  >
+                    Join newsletter
+                  </button>
+                </form>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function FAQ() {
+        const items = [
+          {
+            q: 'How do I book a tour package?',
+            a: 'Browse our tour packages, choose the one you love, and submit a booking request. Our team will confirm details with you over email or phone.'
+          },
+          {
+            q: 'Is online payment supported?',
+            a: 'This demo focuses on the planning experience. In a production setup, secure payment gateways like Razorpay or Stripe can be integrated.'
+          },
+          {
+            q: 'Do you help with visas and flights?',
+            a: 'For Indian domestic travel we assist with hotels, local experiences, and ground transport. International visitors can contact us for custom assistance.'
+          }
+        ];
+
+        return (
+          <section className="py-10 sm:py-12 bg-slate-950">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 text-center">Frequently asked questions</h2>
+              <div className="space-y-3">
+                {items.map((item) => (
+                  <details
+                    key={item.q}
+                    className="group rounded-2xl border border-slate-800 bg-slate-950/60 p-4"
+                  >
+                    <summary className="flex items-center justify-between text-sm font-medium text-slate-100 cursor-pointer">
+                      <span>{item.q}</span>
+                      <span className="ml-3 text-slate-400 group-open:rotate-180 transition-transform">⌃</span>
+                    </summary>
+                    <p className="mt-2 text-xs text-slate-300">{item.a}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function MapSection() {
+        return (
+          <section className="py-10 sm:py-12 bg-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid gap-6 lg:grid-cols-2 items-start">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">See India on the map</h2>
+                  <p className="text-sm text-slate-300 mb-4">
+                    Visualise your next escape—from the Himalayas to the Indian Ocean. Zoom, drag, and explore the map
+                    to imagine your route.
+                  </p>
+                  <ul className="space-y-2 text-xs text-slate-300">
+                    <li>
+                      <span className="font-semibold text-slate-100">North:</span> Kashmir, Ladakh, Himachal Pradesh,
+                      Uttarakhand
+                    </li>
+                    <li>
+                      <span className="font-semibold text-slate-100">West:</span> Rajasthan, Gujarat, Goa, Maharashtra
+                    </li>
+                    <li>
+                      <span className="font-semibold text-slate-100">South:</span> Kerala, Tamil Nadu, Karnataka,
+                      Andhra Pradesh
+                    </li>
+                    <li>
+                      <span className="font-semibold text-slate-100">Islands:</span> Andaman & Nicobar, Lakshadweep
+                    </li>
+                  </ul>
+                </div>
+                <div className="rounded-2xl overflow-hidden border border-slate-800 shadow-lg shadow-slate-950/60">
+                  <iframe
+                    title="Map of India"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18104172.335868627!2d69.20809793285861!3d22.878755587959962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30635ff6c60c8b41%3A0x80a9385cd5b1d36!2sIndia!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                    width="100%"
+                    height="280"
+                    style={{ border: 0 }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      /* ---------- Pages ---------- */
+      function Home() {
+        return (
+          <>
+            <Hero />
+            
+            {/* About Preview */}
+            <section className="py-12 bg-slate-950 border-y border-slate-800">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid lg:grid-cols-2 gap-10 items-center">
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Crafting Your Dream Journey</h2>
+                    <p className="text-slate-400 mb-6 leading-relaxed">
+                      At Start2Go, we don't just book tours; we create memories. From the snow-capped peaks of the Himalayas to the serene backwaters of Kerala, our local experts design itineraries that let you experience India like never before.
+                    </p>
+                    <Link to="/about" className="text-accent-500 font-semibold hover:text-accent-400 flex items-center gap-2">
+                      Learn more about us <span>→</span>
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center">
+                      <p className="text-2xl font-bold text-white">500+</p>
+                      <p className="text-xs text-slate-400">Destinations</p>
+                    </div>
+                    <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center">
+                      <p className="text-2xl font-bold text-white">10k+</p>
+                      <p className="text-xs text-slate-400">Happy Travelers</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <FeaturedPackages />
+            <DestinationsGrid />
+
+            {/* Services Preview */}
+            <section className="py-12 bg-slate-950">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8">All-in-One Travel Solutions</h2>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {[
+                    { t: 'Hotels', i: '🏨', d: 'Handpicked stays for every budget.', link: '#hotels-service' },
+                    { t: 'Transport', i: '🚗', d: 'Safe cars, buses & bikes.', link: '#transport-service' },
+                    { t: 'Guides', i: '🗺️', d: 'Local experts for every city.', link: '#guides-service' },
+                    { t: 'Custom', i: '✨', d: 'Tours built just for you.', link: '#custom-service' }
+                  ].map((s, i) => (
+                    <Link key={i} to={`/services${s.link}`} className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-slate-600 transition cursor-pointer block">
+                      <div className="text-3xl mb-3">{s.i}</div>
+                      <h3 className="font-semibold text-white mb-1">{s.t}</h3>
+                      <p className="text-xs text-slate-400">{s.d}</p>
+                    </Link>
+                  ))}
+                </div>
+                <div className="mt-8">
+                  <Link to="/services" className="inline-flex items-center rounded-full bg-slate-800 px-6 py-2 text-sm font-semibold text-white hover:bg-slate-700 transition">
+                    Explore all services
+                  </Link>
+                </div>
+              </div>
+            </section>
+
+            <Testimonials />
+            <MapSection />
+            <FAQ />
+            <Newsletter />
+          </>
+        );
+      }
+
+      function BookingForm({ selectedPackageId }) {
+        const api = useApi();
+        const [packages, setPackages] = React.useState([]);
+        const [hotels, setHotels] = React.useState([]);
+        const [vehicles, setVehicles] = React.useState([]);
+        const [status, setStatus] = React.useState('');
+
+        const [form, setForm] = React.useState({
+          name: '',
+          email: '',
+          phone: '',
+          travelers: 1,
+          travelDate: '',
+          packageId: selectedPackageId || '',
+          notes: '',
+          vehicleId: '',
+          hotelSelection: [], // Array of { hotelId, roomType }
+          startPoint: '',
+          endPoint: ''
+        });
+
+        const [totalPrice, setTotalPrice] = React.useState(0);
+        const [filteredHotels, setFilteredHotels] = React.useState([]);
+
+        React.useEffect(() => {
+          if (currentPackage && hotels.length > 0) {
+            const related = hotels.filter(h => 
+              currentPackage.destinations?.some(d => 
+                h.location.toLowerCase().trim().includes(d.toLowerCase().trim()) || 
+                d.toLowerCase().trim().includes(h.location.toLowerCase().trim())
+              )
+            );
+            setFilteredHotels(related);
+          } else {
+            // Hide hotels when no package is selected
+            setFilteredHotels([]);
+          }
+        }, [currentPackage, hotels]);
+
+        React.useEffect(() => {
+          if (selectedPackageId) {
+            setForm(f => ({ ...f, packageId: selectedPackageId }));
+          }
+        }, [selectedPackageId]);
+
+        React.useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const [pkgs, htls, vhcls] = await Promise.all([
+                api('/packages'),
+                api('/hotels'),
+                api('/vehicles')
+              ]);
+              setPackages(pkgs);
+              setHotels(htls);
+              setVehicles(vhcls);
+            } catch (err) {
+              console.error('Error fetching data:', err);
+            }
+          };
+          fetchData();
+        }, []);
+
+        const currentPackage = React.useMemo(() => 
+          packages.find(p => p._id === form.packageId), 
+          [packages, form.packageId]
+        );
+
+        React.useEffect(() => {
+          if (!currentPackage) {
+            setTotalPrice(0);
+            return;
+          }
+
+          let price = currentPackage.price;
+
+          const sp = currentPackage.startPoints?.find(p => p.location === form.startPoint);
+          if (sp) price += sp.additionalCost;
+
+          const ep = currentPackage.endPoints?.find(p => p.location === form.endPoint);
+          if (ep) price += ep.additionalCost;
+
+          const v = vehicles.find(v => v._id === form.vehicleId);
+          if (v) price += v.basePrice;
+
+          form.hotelSelection.forEach(sel => {
+            const h = hotels.find(h => h._id === sel.hotelId);
+            if (h) {
+              price += h.pricePerNight;
+              const rt = h.roomTypes?.find(r => r.name === sel.roomType);
+              if (rt) price += rt.additionalCost;
+            }
+          });
+
+          setTotalPrice(price * form.travelers);
+        }, [form, currentPackage, hotels, vehicles]);
+
+        const handleChange = (e) => {
+          const { name, value } = e.target;
+          setForm((f) => ({ ...f, [name]: value }));
+        };
+
+        const handleHotelRoomSelect = (hotelId, roomType) => {
+          setForm(f => {
+            const exists = f.hotelSelection.find(s => s.hotelId === hotelId);
+            let nextSelection;
+            if (exists) {
+              if (exists.roomType === roomType) {
+                nextSelection = f.hotelSelection.filter(s => s.hotelId !== hotelId);
+              } else {
+                nextSelection = f.hotelSelection.map(s => s.hotelId === hotelId ? { hotelId, roomType } : s);
+              }
+            } else {
+              nextSelection = [...f.hotelSelection, { hotelId, roomType }];
+            }
+            return { ...f, hotelSelection: nextSelection };
+          });
+        };
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          setStatus('Submitting...');
+          try {
+            await api('/bookings', {
+              method: 'POST',
+              body: JSON.stringify(form)
+            });
+            setStatus('Booking request submitted successfully!');
+            setForm({
+              name: '', email: '', phone: '', travelers: 1, travelDate: '',
+              packageId: '', notes: '', vehicleId: '', hotelSelection: [],
+              startPoint: '', endPoint: ''
+            });
+          } catch (err) {
+            setStatus(err.message || 'Failed to submit booking.');
+          }
+        };
+
+        return (
+          <section className="py-10 sm:py-12 bg-slate-950">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">Book your next journey</h2>
+              <p className="text-sm text-slate-300 mb-5">
+                Customise your tour with hotels, vehicles, and preferred start/end points.
+              </p>
+              <form
+                onSubmit={handleSubmit}
+                className="grid gap-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-6 shadow-xl"
+              >
+                {/* Basic Info */}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1">Name</label>
+                    <input name="name" required value={form.name} onChange={handleChange}
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1">Email</label>
+                    <input name="email" type="email" required value={form.email} onChange={handleChange}
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1">Phone</label>
+                    <input name="phone" required value={form.phone} onChange={handleChange}
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1">Travellers</label>
+                    <input name="travelers" type="number" min="1" required value={form.travelers} onChange={handleChange}
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1">Travel Date</label>
+                    <input name="travelDate" type="date" required value={form.travelDate} onChange={handleChange}
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                  </div>
+                </div>
+
+                {/* Package Selection */}
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1">Tour Package</label>
+                  <select name="packageId" required value={form.packageId} onChange={handleChange}
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100">
+                    <option value="">Select a package</option>
+                    {packages.map(p => <option key={p._id} value={p._id}>{p.title}</option>)}
+                  </select>
+                </div>
+
+                {currentPackage && (
+                  <div className="grid sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-900/50 border border-slate-800">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-200 mb-1">Starting Point</label>
+                      <select name="startPoint" required value={form.startPoint} onChange={handleChange}
+                        className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100">
+                        <option value="">Select Start Point</option>
+                        {currentPackage.startPoints?.map(p => (
+                          <option key={p.location} value={p.location}>{p.location} (+₹{p.additionalCost})</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-200 mb-1">End Point</label>
+                      <select name="endPoint" required value={form.endPoint} onChange={handleChange}
+                        className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100">
+                        <option value="">Select End Point</option>
+                        {currentPackage.endPoints?.map(p => (
+                          <option key={p.location} value={p.location}>{p.location} (+₹{p.additionalCost})</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                {/* Vehicle */}
+                <div className="grid gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1">Select Vehicle</label>
+                    <select name="vehicleId" value={form.vehicleId} onChange={handleChange}
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100">
+                      <option value="">No Vehicle (Self Arrange)</option>
+                      {vehicles.map(v => (
+                        <option key={v._id} value={v._id}>{v.name} ({v.type}) - ₹{v.basePrice}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1">Special Notes</label>
+                  <textarea name="notes" rows="2" value={form.notes} onChange={handleChange}
+                    placeholder="Any special requests?"
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                </div>
+
+                <div className="flex items-center justify-between gap-4 pt-2 border-t border-slate-800">
+                  <div className="text-slate-100">
+                    <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Price</p>
+                    <p className="text-2xl font-bold text-accent-500">₹{totalPrice.toLocaleString('en-IN')}</p>
+                  </div>
+                  <button type="submit"
+                    className="inline-flex justify-center items-center rounded-xl bg-primary-600 text-slate-50 text-sm font-semibold px-6 py-3 hover:bg-primary-700 transition shadow-lg shadow-primary-600/30">
+                    Confirm Booking
+                  </button>
+                </div>
+                {status && <p className="text-xs text-center text-slate-300 mt-2">{status}</p>}
+              </form>
+            </div>
+          </section>
+        );
+      }
+
+      function Destinations() {
+        return (
+          <>
+            <section className="py-8 sm:py-10 bg-slate-950 border-b border-slate-800">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-2">Destinations in India</h1>
+                <p className="text-sm text-slate-300 max-w-2xl">
+                  From Himalayan peaks to tropical beaches, explore India&apos;s most iconic regions and hidden gems.
+                  Each destination shines in a different season—plan your trip at the perfect time.
+                </p>
+              </div>
+            </section>
+            <DestinationsGrid />
+          </>
+        );
+      }
+
+      function Packages() {
+        const api = useApi();
+        const [packages, setPackages] = React.useState([]);
+        const [filteredPackages, setFilteredPackages] = React.useState([]);
+        const [search, setSearch] = React.useState('');
+        const [maxPrice, setMaxPrice] = React.useState(50000);
+        const [duration, setDuration] = React.useState('');
+        const [bookingPkgId, setBookingPkgId] = React.useState('');
+
+        React.useEffect(() => {
+          (async () => {
+            try {
+              const data = await api('/packages');
+              setPackages(data);
+              setFilteredPackages(data);
+            } catch (err) {
+              console.error(err);
+            }
+          })();
+        }, []);
+
+        React.useEffect(() => {
+          let filtered = packages.filter(p => 
+            (p.title.toLowerCase().includes(search.toLowerCase()) || 
+             p.destinations?.some(d => d.toLowerCase().includes(search.toLowerCase()))) &&
+            p.price <= maxPrice
+          );
+          
+          if (duration) {
+            filtered = filtered.filter(p => p.duration.includes(duration));
+          }
+
+          setFilteredPackages(filtered);
+        }, [search, maxPrice, duration, packages]);
+
+        return (
+          <>
+            <section className="py-8 sm:py-10 bg-slate-950 border-b border-slate-800">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-2">Curated tour packages</h1>
+                <p className="text-sm text-slate-300 max-w-2xl">
+                  Explore India with ready-to-go itineraries that balance must-see landmarks and authentic local
+                  experiences.
+                </p>
+              </div>
+            </section>
+
+            <section className="py-6 bg-slate-900/50 border-b border-slate-800 sticky top-16 z-20 backdrop-blur">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap gap-4 items-center justify-between">
+                <div className="relative flex-1 min-w-[200px]">
+                  <span className="absolute inset-y-0 left-3 flex items-center text-slate-400">⌕</span>
+                  <input 
+                    type="text" 
+                    placeholder="Search by name or destination..." 
+                    className="w-full pl-9 rounded-xl bg-slate-950 border-slate-700 text-sm"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-col">
+                    <label className="text-[10px] text-slate-400 font-semibold mb-1 uppercase">Max Price: ₹{maxPrice}</label>
+                    <input 
+                      type="range" min="5000" max="50000" step="1000"
+                      value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}
+                      className="w-32 accent-accent-500"
+                    />
+                  </div>
+                  <select 
+                    className="rounded-xl bg-slate-950 border-slate-700 text-sm"
+                    value={duration} onChange={(e) => setDuration(e.target.value)}
+                  >
+                    <option value="">All Durations</option>
+                    <option value="4 Days">4-5 Days</option>
+                    <option value="6 Days">6-7 Days</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <section className="py-8 sm:py-10 bg-slate-950">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {filteredPackages.map((pkg) => (
+                    <article
+                      key={pkg._id}
+                      className="group rounded-2xl border border-slate-800 bg-slate-950/60 shadow-lg hover:border-accent-500/50 transition-all flex flex-col"
+                    >
+                      <div className="relative h-48 overflow-hidden rounded-t-2xl">
+                        <img src={pkg.imageUrl} alt={pkg.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        <div className="absolute top-3 right-3 bg-slate-950/80 px-2 py-1 rounded-lg text-xs font-bold text-accent-500 border border-slate-700">
+                          ₹{pkg.price.toLocaleString('en-IN')}
+                        </div>
+                      </div>
+                      <div className="p-5 flex flex-col flex-1">
+                        <div className="flex justify-between items-start mb-2">
+                          <h2 className="text-sm font-bold text-white leading-tight">{pkg.title}</h2>
+                          <span className="text-[10px] text-amber-400 whitespace-nowrap">★ {pkg.rating?.toFixed(1) || '4.5'}</span>
+                        </div>
+                        <p className="text-xs text-slate-400 mb-3 line-clamp-2">{pkg.description}</p>
+                        <div className="flex items-center gap-2 mb-4">
+                          <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded-md">{pkg.duration}</span>
+                          <span className="text-[10px] bg-primary-600/20 text-primary-400 px-2 py-1 rounded-md">{pkg.destinations?.[0]}</span>
+                        </div>
+                        <ul className="flex flex-wrap gap-1 mb-5">
+                          {pkg.facilities?.slice(0, 3).map((f) => (
+                            <li key={f} className="text-[9px] text-slate-500 border border-slate-800 px-2 py-0.5 rounded-full">{f}</li>
+                          ))}
+                        </ul>
+                        <div className="mt-auto">
+                          <button
+                            onClick={() => {
+                              setBookingPkgId(pkg._id);
+                              document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="block w-full text-center rounded-xl bg-primary-600 px-3 py-2 text-xs font-semibold text-slate-50 hover:bg-primary-700 transition"
+                          >
+                            Book This Tour
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+                {filteredPackages.length === 0 && (
+                  <div className="text-center py-20">
+                    <p className="text-slate-500 italic">No packages found matching your criteria.</p>
+                  </div>
+                )}
+              </div>
+            </section>
+            <div id="booking-section">
+              <BookingForm selectedPackageId={bookingPkgId} />
+            </div>
+          </>
+        );
+      }
+
+      function Stories() {
+        const api = useApi();
+        const [stories, setStories] = React.useState([]);
+        const [title, setTitle] = React.useState('');
+        const [text, setText] = React.useState('');
+        const [mediaUrlInput, setMediaUrlInput] = React.useState('');
+        const [status, setStatus] = React.useState('');
+        const [expandedComments, setExpandedComments] = React.useState(() => new Set());
+        const [commentDrafts, setCommentDrafts] = React.useState({});
+        const [commentStatusById, setCommentStatusById] = React.useState({});
+        const token = localStorage.getItem('iit_token');
+
+        React.useEffect(() => {
+          (async () => {
+            try {
+              const data = await api('/stories');
+              setStories(data);
+            } catch {
+              // ignore for public view
+            }
+          })();
+        }, []);
+
+        const handlePost = async (e) => {
+          e.preventDefault();
+          setStatus('Posting your story...');
+          try {
+            const mediaUrls = mediaUrlInput
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean);
+            const created = await api('/stories', {
+              method: 'POST',
+              body: JSON.stringify({ title, text, mediaUrls })
+            });
+            setStories((list) => [created, ...list]);
+            setTitle('');
+            setText('');
+            setMediaUrlInput('');
+            setStatus('Story posted!');
+          } catch (err) {
+            setStatus(err.message || 'Failed to post story.');
+          }
+        };
+
+        const toggleLike = async (id) => {
+          try {
+            const updated = await api(`/stories/${id}/like`, { method: 'POST' });
+            setStories((list) => list.map((s) => (s._id === id ? updated : s)));
+          } catch {
+            alert('Login to like stories.');
+          }
+        };
+
+        const toggleComments = (id) => {
+          setExpandedComments((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+          });
+        };
+
+        const submitComment = async (storyId) => {
+          const text = (commentDrafts[storyId] || '').trim();
+          if (!text) return;
+
+          setCommentStatusById((m) => ({ ...m, [storyId]: 'Posting...' }));
+          try {
+            const updated = await api(`/stories/${storyId}/comments`, {
+              method: 'POST',
+              body: JSON.stringify({ text })
+            });
+            setStories((list) => list.map((s) => (s._id === storyId ? updated : s)));
+            setCommentDrafts((d) => ({ ...d, [storyId]: '' }));
+            setCommentStatusById((m) => ({ ...m, [storyId]: 'Posted' }));
+            setExpandedComments((prev) => new Set(prev).add(storyId));
+          } catch (err) {
+            setCommentStatusById((m) => ({ ...m, [storyId]: err.message || 'Failed to post comment.' }));
+          }
+        };
+
+        return (
+          <>
+            <section className="py-8 sm:py-10 bg-slate-950 border-b border-slate-800">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-2">Read travel stories</h1>
+                <p className="text-sm text-slate-300 max-w-2xl">
+                  Real experiences, tips, and memories from travellers who explored Incredible India. Share your own
+                  story with the community.
+                </p>
+              </div>
+            </section>
+            <section className="py-8 sm:py-10 bg-slate-950">
+              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-6 lg:grid-cols-3">
+                <div className="lg:col-span-1">
+                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                    <h2 className="text-sm font-semibold text-white mb-1">Post a travel story</h2>
+                    <p className="text-xs text-slate-300 mb-3">
+                      Login to share your favourite memories, photos, and tips with other travellers.
+                    </p>
+                    {token ? (
+                      <form onSubmit={handlePost} className="space-y-2">
+                        <div>
+                          <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="story-title">
+                            Title
+                          </label>
+                          <input
+                            id="story-title"
+                            required
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="story-text">
+                            Story
+                          </label>
+                          <textarea
+                            id="story-text"
+                            required
+                            rows="4"
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            placeholder="Share your itinerary, favourite spots, and what made the trip special..."
+                            className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                          ></textarea>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="story-media">
+                            Photo / video URLs (comma separated)
+                          </label>
+                          <input
+                            id="story-media"
+                            value={mediaUrlInput}
+                            onChange={(e) => setMediaUrlInput(e.target.value)}
+                            placeholder="https://... , https://..."
+                            className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                          />
+                          <p className="mt-1 text-[11px] text-slate-400">
+                            For this demo, upload media to your preferred host and paste the links here.
+                          </p>
+                        </div>
+                        <button
+                          type="submit"
+                          className="inline-flex justify-center items-center rounded-xl bg-primary-600 text-slate-50 text-sm font-semibold px-4 py-2.5 hover:bg-primary-700 transition"
+                        >
+                          Publish story
+                        </button>
+                        {status && <p className="text-[11px] text-slate-300">{status}</p>}
+                      </form>
+                    ) : (
+                      <p className="text-xs text-slate-300">
+                        Please <Link className="text-accent-500 underline" to="/login">login</Link> to post your own
+                        travel story.
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="lg:col-span-2">
+                  <div className="space-y-4">
+                    {stories.length === 0 && (
+                      <p className="text-xs text-slate-300">
+                        Stories from the community will appear here once travellers start sharing their journeys.
+                      </p>
+                    )}
+                    {stories.map((story) => (
+                      <article
+                        key={story._id}
+                        className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/50"
+                      >
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-semibold text-slate-100 overflow-hidden">
+                            {story.userId?.profilePhotoUrl ? (
+                              <img
+                                src={story.userId.profilePhotoUrl}
+                                alt={story.userId.name}
+                                className="h-full w-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <span>{story.userId?.name?.charAt(0) || 'T'}</span>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-slate-100">{story.userId?.name || 'Traveller'}</p>
+                            <p className="text-[11px] text-slate-400">
+                              {new Date(story.createdAt).toLocaleDateString('en-IN', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                        <h2 className="text-sm font-semibold text-white mb-2">{story.title}</h2>
+                        <p className="text-xs text-slate-200 whitespace-pre-line mb-3">{story.text}</p>
+                        {story.mediaUrls && story.mediaUrls.length > 0 && (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+                            {story.mediaUrls.slice(0, 6).map((url, idx) => (
+                              <div key={idx} className="aspect-video rounded-xl overflow-hidden bg-slate-900">
+                                {url.match(/\.(mp4|webm)$/i) ? (
+                                  <video src={url} controls className="h-full w-full object-cover" />
+                                ) : (
+                                  <img
+                                    src={url}
+                                    alt={story.title}
+                                    className="h-full w-full object-cover"
+                                    loading="lazy"
+                                  />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-300">
+                          <button
+                            onClick={() => (token ? toggleLike(story._id) : alert('Login to like stories.'))}
+                            className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-accent-500 hover:text-accent-400 hover:border-accent-500 transition"
+                          >
+                            <span>♥</span>
+                            <span>{story.likes?.length || 0}</span>
+                            <span className="text-slate-400">Likes</span>
+                          </button>
+                          <button
+                            onClick={() => toggleComments(story._id)}
+                            className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-3 py-1.5 text-slate-200 hover:text-white hover:border-slate-500 transition"
+                          >
+                            <span>💬</span>
+                            <span>{story.comments?.length || 0}</span>
+                            <span className="text-slate-400">Comments</span>
+                          </button>
+                          {!token && (
+                            <span className="text-slate-400">
+                              Login to like or comment.
+                            </span>
+                          )}
+                        </div>
+
+                        {expandedComments.has(story._id) && (
+                          <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-950/40 p-3">
+                            <h3 className="text-xs font-semibold text-slate-100 mb-2">Comments</h3>
+
+                            {token && (
+                              <div className="mb-3">
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                  <input
+                                    value={commentDrafts[story._id] || ''}
+                                    onChange={(e) =>
+                                      setCommentDrafts((d) => ({ ...d, [story._id]: e.target.value }))
+                                    }
+                                    placeholder="Write a comment..."
+                                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                                  />
+                                  <button
+                                    onClick={() => submitComment(story._id)}
+                                    className="inline-flex justify-center items-center rounded-xl bg-primary-600 text-slate-50 text-sm font-semibold px-4 py-2.5 hover:bg-primary-700 transition whitespace-nowrap"
+                                  >
+                                    Post
+                                  </button>
+                                </div>
+                                {commentStatusById[story._id] && (
+                                  <p className="mt-1 text-[11px] text-slate-400">{commentStatusById[story._id]}</p>
+                                )}
+                              </div>
+                            )}
+
+                            <div className="space-y-2">
+                              {(story.comments || []).length === 0 ? (
+                                <p className="text-[11px] text-slate-400">No comments yet. Be the first!</p>
+                              ) : (
+                                (story.comments || []).slice().reverse().map((c) => (
+                                  <div key={c._id || c.createdAt} className="flex gap-2">
+                                    <div className="h-7 w-7 rounded-full bg-slate-800 flex items-center justify-center text-[11px] font-semibold text-slate-100 overflow-hidden">
+                                      {c.userId?.profilePhotoUrl ? (
+                                        <img
+                                          src={c.userId.profilePhotoUrl}
+                                          alt={c.userId.name}
+                                          className="h-full w-full object-cover"
+                                          loading="lazy"
+                                        />
+                                      ) : (
+                                        <span>{c.userId?.name?.charAt(0) || 'U'}</span>
+                                      )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center justify-between gap-2">
+                                        <p className="text-[11px] font-semibold text-slate-100 truncate">
+                                          {c.userId?.name || 'User'}
+                                        </p>
+                                        {c.createdAt && (
+                                          <p className="text-[10px] text-slate-500">
+                                            {new Date(c.createdAt).toLocaleDateString('en-IN', {
+                                              day: '2-digit',
+                                              month: 'short',
+                                              year: 'numeric'
+                                            })}
+                                          </p>
+                                        )}
+                                      </div>
+                                      <p className="text-[11px] text-slate-200 whitespace-pre-line">{c.text}</p>
+                                    </div>
+                                  </div>
+                                ))
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+          </>
+        );
+      }
+
+      function SearchResults() {
+        const navigate = useNavigate();
+        const q = useQueryParam('q');
+        const [value, setValue] = React.useState(q);
+
+        React.useEffect(() => {
+          setValue(q);
+        }, [q]);
+
+        const destinations = DESTINATIONS;
+        const packages = PACKAGES;
+
+        const destinationResults = destinations.filter((d) =>
+          matchesQuery([d.name, d.state, d.bestTime, ...(d.attractions || [])], q)
+        );
+        const packageResults = packages.filter((p) =>
+          matchesQuery([p.title, p.duration, ...(p.facilities || [])], q)
+        );
+
+        return (
+          <section className="py-8 sm:py-10 bg-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6">
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-semibold text-white">Search results</h1>
+                  <p className="text-sm text-slate-300 mt-1">
+                    Showing results for <span className="text-slate-100 font-semibold">&ldquo;{q || '...'}&rdquo;</span>
+                  </p>
+                </div>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    navigate(`/search?q=${encodeURIComponent(value.trim())}`);
+                  }}
+                  className="flex gap-2 w-full sm:w-auto"
+                >
+                  <div className="relative flex-1 sm:w-80">
+                    <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
+                      ⌕
+                    </span>
+                    <input
+                      value={value}
+                      onChange={(e) => setValue(e.target.value)}
+                      placeholder="Search..."
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500 pl-9"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="inline-flex justify-center items-center rounded-xl bg-accent-500 text-slate-950 text-sm font-semibold px-4 py-2.5 hover:bg-accent-500/90 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                    disabled={!value.trim()}
+                  >
+                    Search
+                  </button>
+                </form>
+              </div>
+
+              <div className="grid gap-8">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-lg font-semibold text-white">Destinations</h2>
+                    <span className="text-xs text-slate-400">{destinationResults.length} found</span>
+                  </div>
+                  {destinationResults.length === 0 ? (
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
+                      No destinations matched your search.
+                    </div>
+                  ) : (
+                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                      {destinationResults.map((d) => (
+                        <article
+                          key={d.name}
+                          className="group rounded-2xl border border-slate-800 bg-slate-950/60 shadow-lg shadow-slate-950/50 overflow-hidden"
+                        >
+                          <div className="relative h-40 overflow-hidden">
+                            <img
+                              src={d.image}
+                              alt={d.name}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent" />
+                            <div className="absolute bottom-3 left-3">
+                              <h3 className="text-sm font-semibold text-white">{d.name}</h3>
+                              <p className="text-[11px] text-slate-200">{d.state}</p>
+                            </div>
+                          </div>
+                          <div className="p-4">
+                            <p className="text-xs text-slate-300 mb-2">
+                              <span className="font-semibold text-slate-100">Best time:</span> {d.bestTime}
+                            </p>
+                            <p className="text-xs text-slate-300 mb-2">Top attractions:</p>
+                            <ul className="flex flex-wrap gap-1">
+                              {d.attractions.map((a) => (
+                                <li
+                                  key={a}
+                                  className="inline-flex items-center rounded-full bg-slate-900 px-2 py-0.5 text-[11px] text-slate-200"
+                                >
+                                  {a}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-lg font-semibold text-white">Tour packages</h2>
+                    <span className="text-xs text-slate-400">{packageResults.length} found</span>
+                  </div>
+                  {packageResults.length === 0 ? (
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
+                      No packages matched your search.
+                    </div>
+                  ) : (
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      {packageResults.map((pkg) => (
+                        <article
+                          key={pkg.title}
+                          className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/50 flex flex-col gap-2"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <h3 className="text-sm font-semibold text-white">{pkg.title}</h3>
+                              <p className="text-xs text-slate-300 mt-1">{pkg.duration}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs text-slate-200">
+                                From{' '}
+                                <span className="text-accent-500 text-sm font-semibold">
+                                  ₹{pkg.price.toLocaleString('en-IN')}
+                                </span>
+                              </p>
+                              <p className="text-[11px] text-amber-400 mt-0.5">★ {pkg.rating.toFixed(1)}</p>
+                            </div>
+                          </div>
+                          <ul className="flex flex-wrap gap-1 mt-2">
+                            {pkg.facilities.map((f) => (
+                              <li
+                                key={f}
+                                className="inline-flex items-center rounded-full bg-slate-900 px-2 py-0.5 text-[11px] text-slate-200"
+                              >
+                                {f}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="mt-3 flex items-center justify-between gap-3">
+                            <p className="text-[11px] text-slate-400">Flexible cancellation · Customisable itineraries</p>
+                            <Link
+                              to="/packages"
+                              className="inline-flex items-center rounded-full bg-primary-600 px-3 py-1.5 text-[11px] font-semibold text-slate-50 hover:bg-primary-700 transition whitespace-nowrap"
+                            >
+                              Book
+                            </Link>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function Blog() {
+        const posts = BLOG_POSTS;
+
+        return (
+          <section className="py-8 sm:py-10 bg-slate-950">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-2">Travel blog</h1>
+              <p className="text-sm text-slate-300 mb-6">
+                Curated guides and ideas to help you plan smarter trips across India.
+              </p>
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <article
+                    key={post.title}
+                    className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 shadow-lg shadow-slate-950/50"
+                  >
+                    <h2 className="text-sm font-semibold text-white mb-1">{post.title}</h2>
+                    <p className="text-xs text-slate-300 mb-2">{post.excerpt}</p>
+                    <div className="flex items-center justify-between">
+                      <ul className="flex flex-wrap gap-1">
+                        {post.tags.map((tag) => (
+                          <li
+                            key={tag}
+                            className="inline-flex items-center rounded-full bg-slate-900 px-2 py-0.5 text-[11px] text-slate-200"
+                          >
+                            {tag}
+                          </li>
+                        ))}
+                      </ul>
+                      <span className="text-[11px] text-slate-400">3 min read</span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      function Login({ auth }) {
+        const api = useApi();
+        const navigate = useNavigate();
+        const [email, setEmail] = React.useState('');
+        const [password, setPassword] = React.useState('');
+        const [status, setStatus] = React.useState('');
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          setStatus('Logging you in...');
+          try {
+            const data = await api('/auth/login', {
+              method: 'POST',
+              body: JSON.stringify({ email, password })
+            });
+            auth.login(data);
+            navigate('/dashboard');
+          } catch (err) {
+            setStatus(err.message || 'Login failed.');
+          }
+        };
+
+        return (
+          <section className="py-10 sm:py-12 bg-slate-950">
+            <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+              <h1 className="text-2xl font-semibold text-white mb-2">Login</h1>
+              <p className="text-sm text-slate-300 mb-5">
+                Access your dashboard, manage bookings, and share your travel stories.
+              </p>
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4"
+              >
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="login-email">
+                    Email
+                  </label>
+                  <input
+                    id="login-email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="login-password">
+                    Password
+                  </label>
+                  <input
+                    id="login-password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="inline-flex justify-center items-center w-full rounded-xl bg-primary-600 text-slate-50 text-sm font-semibold px-4 py-2.5 hover:bg-primary-700 transition"
+                >
+                  Login
+                </button>
+                {status && <p className="text-[11px] text-slate-300">{status}</p>}
+                <p className="text-[11px] text-slate-400">
+                  New here?{' '}
+                  <Link className="text-accent-500 underline" to="/signup">
+                    Create an account
+                  </Link>
+                </p>
+              </form>
+            </div>
+          </section>
+        );
+      }
+
+      function Signup({ auth }) {
+        const api = useApi();
+        const navigate = useNavigate();
+        const [form, setForm] = React.useState({
+          name: '',
+          email: '',
+          password: '',
+          profilePhotoUrl: ''
+        });
+        const [photoStatus, setPhotoStatus] = React.useState('');
+        const [status, setStatus] = React.useState('');
+
+        const handleChange = (e) => {
+          const { name, value } = e.target;
+          setForm((f) => ({ ...f, [name]: value }));
+        };
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          setStatus('Creating your account...');
+          try {
+            const data = await api('/auth/signup', {
+              method: 'POST',
+              body: JSON.stringify(form)
+            });
+            auth.login(data);
+            navigate('/dashboard');
+          } catch (err) {
+            setStatus(err.message || 'Sign-up failed.');
+          }
+        };
+
+        return (
+          <section className="py-10 sm:py-12 bg-slate-950">
+            <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+              <h1 className="text-2xl font-semibold text-white mb-2">Create your account</h1>
+              <p className="text-sm text-slate-300 mb-5">
+                Save favourite trips, manage bookings, and share your travel stories with the community.
+              </p>
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4"
+              >
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="signup-name">
+                    Name
+                  </label>
+                  <input
+                    id="signup-name"
+                    name="name"
+                    required
+                    value={form.name}
+                    onChange={handleChange}
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="signup-email">
+                    Email
+                  </label>
+                  <input
+                    id="signup-email"
+                    type="email"
+                    name="email"
+                    required
+                    value={form.email}
+                    onChange={handleChange}
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="signup-password">
+                    Password
+                  </label>
+                  <input
+                    id="signup-password"
+                    type="password"
+                    name="password"
+                    required
+                    value={form.password}
+                    onChange={handleChange}
+                    className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="signup-photo-file">
+                    Profile photo (upload)
+                  </label>
+                  <input
+                    id="signup-photo-file"
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files && e.target.files[0];
+                      if (!file) return;
+                      setPhotoStatus('Processing photo...');
+                      try {
+                        const dataUrl = await compressImageToDataUrl(file);
+                        setForm((f) => ({ ...f, profilePhotoUrl: dataUrl }));
+                        setPhotoStatus('Photo ready.');
+                      } catch (err) {
+                        setPhotoStatus(err.message || 'Failed to process photo.');
+                      }
+                    }}
+                    className="block w-full text-xs text-slate-200 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-800 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-slate-100 hover:file:bg-slate-700"
+                  />
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center text-xs font-semibold text-slate-100">
+                      {form.profilePhotoUrl ? (
+                        <img src={form.profilePhotoUrl} alt="Profile preview" className="h-full w-full object-cover" />
+                      ) : (
+                        <span>{form.name ? form.name.charAt(0) : 'U'}</span>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[11px] text-slate-300">
+                        Upload a photo from your computer/phone. It will be compressed and saved safely.
+                      </p>
+                      {photoStatus && <p className="text-[11px] text-slate-400">{photoStatus}</p>}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="inline-flex justify-center items-center w-full rounded-xl bg-primary-600 text-slate-50 text-sm font-semibold px-4 py-2.5 hover:bg-primary-700 transition"
+                >
+                  Sign up
+                </button>
+                {status && <p className="text-[11px] text-slate-300">{status}</p>}
+                <p className="text-[11px] text-slate-400">
+                  Already registered?{' '}
+                  <Link className="text-accent-500 underline" to="/login">
+                    Login
+                  </Link>
+                </p>
+              </form>
+            </div>
+          </section>
+        );
+      }
+
+      function Dashboard({ auth }) {
+        const api = useApi();
+        const navigate = useNavigate();
+        const [tab, setTab] = React.useState('stories');
+        const [myStories, setMyStories] = React.useState([]);
+        const [bookings, setBookings] = React.useState([]);
+        const [profile, setProfile] = React.useState({
+          name: auth.user?.name || '',
+          profilePhotoUrl: auth.user?.profilePhotoUrl || ''
+        });
+        const [photoStatus, setPhotoStatus] = React.useState('');
+        const [status, setStatus] = React.useState('');
+
+        React.useEffect(() => {
+          if (!auth.user) {
+            navigate('/login');
+            return;
+          }
+          (async () => {
+            try {
+              const [storiesRes, bookingsRes] = await Promise.all([
+                api('/stories/me'),
+                api('/bookings/me')
+              ]);
+              setMyStories(storiesRes);
+              setBookings(bookingsRes);
+            } catch {
+              // ignore initial errors
+            }
+          })();
+        }, []);
+
+        const handleProfileUpdate = async (e) => {
+          e.preventDefault();
+          setStatus('Updating profile...');
+          try {
+            const updated = await api('/auth/me', {
+              method: 'PUT',
+              body: JSON.stringify(profile)
+            });
+            localStorage.setItem('iit_user', JSON.stringify(updated));
+            setStatus('Profile updated.');
+          } catch (err) {
+            setStatus(err.message || 'Failed to update profile.');
+          }
+        };
+
+        const removeStory = async (id) => {
+          if (!window.confirm('Delete this story?')) return;
+          try {
+            await api(`/stories/${id}`, { method: 'DELETE' });
+            setMyStories((list) => list.filter((s) => s._id !== id));
+          } catch {
+            alert('Failed to delete story.');
+          }
+        };
+
+        if (!auth.user) {
+          return null;
+        }
+
+        return (
+          <section className="py-8 sm:py-10 bg-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-sm font-semibold text-slate-100 overflow-hidden">
+                    {auth.user.profilePhotoUrl ? (
+                      <img
+                        src={auth.user.profilePhotoUrl}
+                        alt={auth.user.name}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span>{auth.user.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-semibold text-white">Your dashboard</h1>
+                    <p className="text-xs text-slate-300">
+                      Manage your profile, bookings, and travel stories.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 text-[11px]">
+                  <button
+                    onClick={() => setTab('stories')}
+                    className={
+                      'px-3 py-1.5 rounded-full border ' +
+                      (tab === 'stories'
+                        ? 'border-accent-500 bg-accent-500/10 text-accent-500'
+                        : 'border-slate-700 text-slate-200')
+                    }
+                  >
+                    Your stories
+                  </button>
+                  <button
+                    onClick={() => setTab('bookings')}
+                    className={
+                      'px-3 py-1.5 rounded-full border ' +
+                      (tab === 'bookings'
+                        ? 'border-accent-500 bg-accent-500/10 text-accent-500'
+                        : 'border-slate-700 text-slate-200')
+                    }
+                  >
+                    Your bookings
+                  </button>
+                  <button
+                    onClick={() => setTab('profile')}
+                    className={
+                      'px-3 py-1.5 rounded-full border ' +
+                      (tab === 'profile'
+                        ? 'border-accent-500 bg-accent-500/10 text-accent-500'
+                        : 'border-slate-700 text-slate-200')
+                    }
+                  >
+                    Edit profile
+                  </button>
+                </div>
+              </div>
+
+              {tab === 'profile' && (
+                <form
+                  onSubmit={handleProfileUpdate}
+                  className="max-w-md space-y-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4"
+                >
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="profile-name">
+                      Name
+                    </label>
+                    <input
+                      id="profile-name"
+                      name="name"
+                      value={profile.name}
+                      onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))}
+                      className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100 placeholder:text-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-200 mb-1" htmlFor="profile-photo-file">
+                      Profile photo (upload)
+                    </label>
+                    <input
+                      id="profile-photo-file"
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files && e.target.files[0];
+                        if (!file) return;
+                        setPhotoStatus('Processing photo...');
+                        try {
+                          const dataUrl = await compressImageToDataUrl(file);
+                          setProfile((p) => ({ ...p, profilePhotoUrl: dataUrl }));
+                          setPhotoStatus('Photo ready.');
+                        } catch (err) {
+                          setPhotoStatus(err.message || 'Failed to process photo.');
+                        }
+                      }}
+                      className="block w-full text-xs text-slate-200 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-800 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-slate-100 hover:file:bg-slate-700"
+                    />
+                    <div className="mt-2 flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center text-xs font-semibold text-slate-100">
+                        {profile.profilePhotoUrl ? (
+                          <img
+                            src={profile.profilePhotoUrl}
+                            alt="Profile preview"
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span>{profile.name ? profile.name.charAt(0) : 'U'}</span>
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[11px] text-slate-300">
+                          Upload from local storage.
+                        </p>
+                        {photoStatus && <p className="text-[11px] text-slate-400">{photoStatus}</p>}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="inline-flex justify-center items-center rounded-xl bg-primary-600 text-slate-50 text-sm font-semibold px-4 py-2.5 hover:bg-primary-700 transition"
+                  >
+                    Save changes
+                  </button>
+                  {status && <p className="text-[11px] text-slate-300">{status}</p>}
+                </form>
+              )}
+
+              {tab === 'bookings' && (
+                <div className="space-y-3">
+                  {bookings.length === 0 && (
+                    <p className="text-xs text-slate-300">
+                      You don&apos;t have any bookings yet. Use the booking form on the Tour Packages page.
+                    </p>
+                  )}
+                  {bookings.map((b) => (
+                    <article
+                      key={b._id}
+                      className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-xs text-slate-200"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                          <p className="font-semibold">{b.name}</p>
+                          <p className="text-slate-400">{b.email}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-slate-300">
+                            {new Date(b.travelDate).toLocaleDateString('en-IN', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                          </p>
+                          <p className="text-slate-400">{b.travelers} travellers</p>
+                        </div>
+                      </div>
+                      {b.notes && <p className="mt-2 text-slate-300">Notes: {b.notes}</p>}
+                    </article>
+                  ))}
+                </div>
+              )}
+
+              {tab === 'stories' && (
+                <div className="space-y-3">
+                  {myStories.length === 0 && (
+                    <p className="text-xs text-slate-300">
+                      You haven&apos;t shared any stories yet. Post your first one on the Travel Stories page.
+                    </p>
+                  )}
+                  {myStories.map((story) => (
+                    <article
+                      key={story._id}
+                      className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-xs text-slate-200"
+                    >
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <h2 className="font-semibold text-slate-100">{story.title}</h2>
+                        <p className="text-[11px] text-slate-400">
+                          {new Date(story.createdAt).toLocaleDateString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                          })}
+                        </p>
+                      </div>
+                      <p className="text-slate-300 mb-2 line-clamp-3">{story.text}</p>
+                      <div className="flex items-center justify-between text-[11px] text-slate-400">
+                        <span>
+                          {story.likes?.length || 0} likes · {story.comments?.length || 0} comments
+                        </span>
+                        <button
+                          onClick={() => removeStory(story._id)}
+                          className="inline-flex items-center text-rose-400 hover:text-rose-300"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        );
+      }
+
+      /* ---------- Shared footer ---------- */
+      function Footer() {
+        return (
+          <footer className="border-t border-slate-800 bg-slate-950">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between text-[11px] text-slate-400">
+              <div>
+                <p className="font-semibold text-slate-200">Start2Go</p>
+                <p className="mt-0.5">
+                  Crafted as a modern demo for exploring, booking, and sharing travel experiences across India.
+                </p>
+              </div>
+              <div className="flex flex-col sm:items-end gap-2">
+                <div className="flex gap-3">
+                  <a
+                    href="https://www.facebook.com"
+                    target="_blank"
+                    rel="noopener"
+                    className="hover:text-slate-200"
+                    aria-label="Facebook"
+                  >
+                    Facebook
+                  </a>
+                  <a
+                    href="https://www.instagram.com"
+                    target="_blank"
+                    rel="noopener"
+                    className="hover:text-slate-200"
+                    aria-label="Instagram"
+                  >
+                    Instagram
+                  </a>
+                  <a
+                    href="https://www.youtube.com"
+                    target="_blank"
+                    rel="noopener"
+                    className="hover:text-slate-200"
+                    aria-label="YouTube"
+                  >
+                    YouTube
+                  </a>
+                </div>
+                <p>© {new Date().getFullYear()} Start2Go. All rights reserved.</p>
+              </div>
+            </div>
+          </footer>
+        );
+      }
+
+      /* ---------- App entry ---------- */
+      function App() {
+        const auth = useAuth();
+
+        return (
+          <BrowserRouter>
+            <Layout auth={auth} />
+          </BrowserRouter>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>

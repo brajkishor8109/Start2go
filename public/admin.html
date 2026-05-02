@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start2Go Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <h1 class="text-2xl font-bold mb-6">Start2Go Admin Panel</h1>
+
+      <div id="loginCard" class="bg-slate-900 border border-slate-800 rounded-xl p-4 mb-6">
+        <h2 class="text-lg font-semibold mb-3">Admin Login</h2>
+        <form id="loginForm" class="grid sm:grid-cols-3 gap-3">
+          <input id="email" type="email" placeholder="Admin email" class="bg-slate-800 rounded px-3 py-2" required />
+          <input id="password" type="password" placeholder="Password" class="bg-slate-800 rounded px-3 py-2" required />
+          <button class="bg-blue-600 hover:bg-blue-500 rounded px-3 py-2 font-medium" type="submit">Login</button>
+        </form>
+      </div>
+
+      <div id="panel" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <p id="adminInfo" class="text-sm text-slate-300"></p>
+          <button id="logoutBtn" class="bg-slate-800 hover:bg-slate-700 rounded px-3 py-2 text-sm">Logout</button>
+        </div>
+
+        <div class="grid xl:grid-cols-2 gap-6">
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <h2 class="text-lg font-semibold mb-3">Package</h2>
+            <form id="packageForm" class="space-y-2">
+              <input id="pkgId" type="hidden" />
+              <input id="pkgTitle" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Title" required />
+              <input id="pkgSlug" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Slug" required />
+              <textarea id="pkgDescription" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Description" required></textarea>
+              <input id="pkgPrice" type="number" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Price" required />
+              <input id="pkgDuration" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Duration (e.g. 5D/4N)" required />
+              <input id="pkgImageUrl" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Image URL" />
+              <input id="pkgDestinations" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Destinations comma separated" />
+              <div class="grid grid-cols-2 gap-2">
+                <button id="pkgSubmit" type="submit" class="bg-emerald-600 hover:bg-emerald-500 rounded px-3 py-2 font-medium">
+                  Save Package
+                </button>
+                <button id="pkgCancel" type="button" class="bg-slate-700 hover:bg-slate-600 rounded px-3 py-2">Cancel Edit</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <h2 class="text-lg font-semibold mb-3">Destination</h2>
+            <form id="destinationForm" class="space-y-2">
+              <input id="destId" type="hidden" />
+              <input id="destName" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Name" required />
+              <input id="destSlug" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Slug" required />
+              <input id="destState" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="State" required />
+              <textarea id="destDescription" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Description" required></textarea>
+              <input id="destBestTime" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Best time to visit" required />
+              <input id="destAttractions" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Attractions comma separated" />
+              <input id="destImageUrl" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Image URL" />
+              <div class="grid grid-cols-2 gap-2">
+                <button id="destSubmit" type="submit" class="bg-violet-600 hover:bg-violet-500 rounded px-3 py-2 font-medium">
+                  Save Destination
+                </button>
+                <button id="destCancel" type="button" class="bg-slate-700 hover:bg-slate-600 rounded px-3 py-2">Cancel Edit</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <h2 class="text-lg font-semibold mb-3">Vehicle</h2>
+            <form id="vehicleForm" class="space-y-2">
+              <input id="vehicleId" type="hidden" />
+              <input id="vehicleName" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Name" required />
+              <select id="vehicleType" class="w-full bg-slate-800 rounded px-3 py-2" required>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="MiniBus">MiniBus</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Bike">Bike</option>
+                <option value="Bus">Bus</option>
+              </select>
+              <input id="vehicleCapacity" type="number" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Capacity" required />
+              <input id="vehiclePricePerKm" type="number" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Price per km" required />
+              <input id="vehicleBasePrice" type="number" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Base price" required />
+              <input id="vehicleImageUrl" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Image URL" />
+              <label class="flex items-center gap-2 text-sm"><input id="vehicleIsAvailable" type="checkbox" checked />Available</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="vehicleSubmit" type="submit" class="bg-cyan-600 hover:bg-cyan-500 rounded px-3 py-2 font-medium">
+                  Save Vehicle
+                </button>
+                <button id="vehicleCancel" type="button" class="bg-slate-700 hover:bg-slate-600 rounded px-3 py-2">Cancel Edit</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <h2 class="text-lg font-semibold mb-3">Hotel</h2>
+            <form id="hotelForm" class="space-y-2">
+              <input id="hotelId" type="hidden" />
+              <input id="hotelName" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Name" required />
+              <input id="hotelLocation" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Location" required />
+              <textarea id="hotelDescription" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Description" required></textarea>
+              <input id="hotelRating" type="number" step="0.1" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Rating" />
+              <input id="hotelPricePerNight" type="number" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Price per night" required />
+              <input id="hotelAmenities" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Amenities comma separated" />
+              <input id="hotelRoomTypes" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Room types: Deluxe:1000,Suite:3000" />
+              <input id="hotelImageUrl" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Image URL" />
+              <input id="hotelWebsite" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Website" />
+              <label class="flex items-center gap-2 text-sm"><input id="hotelIsAvailable" type="checkbox" checked />Available</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="hotelSubmit" type="submit" class="bg-orange-600 hover:bg-orange-500 rounded px-3 py-2 font-medium">
+                  Save Hotel
+                </button>
+                <button id="hotelCancel" type="button" class="bg-slate-700 hover:bg-slate-600 rounded px-3 py-2">Cancel Edit</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 xl:col-span-2">
+            <h2 class="text-lg font-semibold mb-3">Blog</h2>
+            <form id="blogForm" class="space-y-2">
+              <input id="blogId" type="hidden" />
+              <div class="grid md:grid-cols-2 gap-2">
+                <input id="blogTitle" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Title" required />
+                <input id="blogSlug" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Slug" required />
+              </div>
+              <textarea id="blogExcerpt" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Excerpt" required></textarea>
+              <textarea id="blogContent" class="w-full bg-slate-800 rounded px-3 py-2 min-h-40" placeholder="Content" required></textarea>
+              <div class="grid md:grid-cols-2 gap-2">
+                <input id="blogTags" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Tags comma separated" />
+                <input id="blogHeroImageUrl" class="w-full bg-slate-800 rounded px-3 py-2" placeholder="Hero image URL" />
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="blogSubmit" type="submit" class="bg-pink-600 hover:bg-pink-500 rounded px-3 py-2 font-medium">
+                  Save Blog
+                </button>
+                <button id="blogCancel" type="button" class="bg-slate-700 hover:bg-slate-600 rounded px-3 py-2">Cancel Edit</button>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <div class="grid xl:grid-cols-2 gap-6 mt-6">
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4"><h3 class="font-semibold mb-3">Packages</h3><ul id="packageList" class="space-y-2 text-sm"></ul></section>
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4"><h3 class="font-semibold mb-3">Destinations</h3><ul id="destinationList" class="space-y-2 text-sm"></ul></section>
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4"><h3 class="font-semibold mb-3">Vehicles</h3><ul id="vehicleList" class="space-y-2 text-sm"></ul></section>
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4"><h3 class="font-semibold mb-3">Hotels</h3><ul id="hotelList" class="space-y-2 text-sm"></ul></section>
+          <section class="bg-slate-900 border border-slate-800 rounded-xl p-4 xl:col-span-2"><h3 class="font-semibold mb-3">Blogs</h3><ul id="blogList" class="space-y-2 text-sm"></ul></section>
+        </div>
+      </div>
+
+      <p id="msg" class="mt-4 text-sm text-amber-300"></p>
+    </div>
+
+    <script>
+      const API_BASE = '/api';
+      const msgEl = document.getElementById('msg');
+      const loginCard = document.getElementById('loginCard');
+      const panel = document.getElementById('panel');
+      const adminInfo = document.getElementById('adminInfo');
+      let token = localStorage.getItem('iit_token') || '';
+      let currentUser = JSON.parse(localStorage.getItem('iit_user') || 'null');
+      const state = { packages: [], destinations: [], vehicles: [], hotels: [], blogs: [] };
+
+      const listEls = {
+        package: document.getElementById('packageList'),
+        destination: document.getElementById('destinationList'),
+        vehicle: document.getElementById('vehicleList'),
+        hotel: document.getElementById('hotelList'),
+        blog: document.getElementById('blogList'),
+      };
+
+      function setMessage(message, isError = false) {
+        msgEl.textContent = message;
+        msgEl.className = `mt-4 text-sm ${isError ? 'text-rose-300' : 'text-emerald-300'}`;
+      }
+
+      async function api(path, options = {}) {
+        const headers = options.headers || {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+        if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+        const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.message || 'Request failed');
+        return data;
+      }
+
+      const toList = (value) => String(value || '').split(',').map((v) => v.trim()).filter(Boolean);
+      const toRoomTypes = (value) =>
+        String(value || '')
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean)
+          .map((item) => {
+            const [name, cost] = item.split(':');
+            return { name: (name || '').trim(), additionalCost: Number((cost || '0').trim()) || 0 };
+          })
+          .filter((item) => item.name);
+
+      const roomTypesToInput = (roomTypes) => (roomTypes || []).map((item) => `${item.name}:${item.additionalCost || 0}`).join(',');
+
+      function showAdmin() {
+        loginCard.classList.add('hidden');
+        panel.classList.remove('hidden');
+        adminInfo.textContent = `Logged in as ${currentUser.name} (${currentUser.email})`;
+      }
+
+      function showLogin() {
+        loginCard.classList.remove('hidden');
+        panel.classList.add('hidden');
+      }
+
+      function resetForm(type) {
+        const prefixes = { package: 'pkg', destination: 'dest', vehicle: 'vehicle', hotel: 'hotel', blog: 'blog' };
+        const prefix = prefixes[type];
+        document.getElementById(`${prefix}Form`).reset();
+        document.getElementById(`${prefix}Id`).value = '';
+      }
+
+      function actionButtons(type, id) {
+        return `
+          <div class="flex gap-2">
+            <button data-id="${id}" data-type="${type}" data-action="edit" class="bg-blue-700 hover:bg-blue-600 rounded px-2 py-1 text-xs">Edit</button>
+            <button data-id="${id}" data-type="${type}" data-action="delete" class="bg-rose-700 hover:bg-rose-600 rounded px-2 py-1 text-xs">Delete</button>
+          </div>
+        `;
+      }
+
+      function renderLists() {
+        listEls.package.innerHTML = state.packages
+          .map((item) => `<li class="border border-slate-800 rounded p-2 flex items-center justify-between gap-2"><div><p class="font-medium">${item.title}</p><p class="text-slate-400">${item.slug}</p></div>${actionButtons('package', item._id)}</li>`)
+          .join('');
+        listEls.destination.innerHTML = state.destinations
+          .map((item) => `<li class="border border-slate-800 rounded p-2 flex items-center justify-between gap-2"><div><p class="font-medium">${item.name}</p><p class="text-slate-400">${item.slug}</p></div>${actionButtons('destination', item._id)}</li>`)
+          .join('');
+        listEls.vehicle.innerHTML = state.vehicles
+          .map((item) => `<li class="border border-slate-800 rounded p-2 flex items-center justify-between gap-2"><div><p class="font-medium">${item.name}</p><p class="text-slate-400">${item.type} | Available: ${item.isAvailable ? 'Yes' : 'No'}</p></div>${actionButtons('vehicle', item._id)}</li>`)
+          .join('');
+        listEls.hotel.innerHTML = state.hotels
+          .map((item) => `<li class="border border-slate-800 rounded p-2 flex items-center justify-between gap-2"><div><p class="font-medium">${item.name}</p><p class="text-slate-400">${item.location} | Available: ${item.isAvailable ? 'Yes' : 'No'}</p></div>${actionButtons('hotel', item._id)}</li>`)
+          .join('');
+        listEls.blog.innerHTML = state.blogs
+          .map((item) => `<li class="border border-slate-800 rounded p-2 flex items-center justify-between gap-2"><div><p class="font-medium">${item.title}</p><p class="text-slate-400">${item.slug}</p></div>${actionButtons('blog', item._id)}</li>`)
+          .join('');
+      }
+
+      async function refreshLists() {
+        const [packages, destinations, vehicles, hotels, blogs] = await Promise.all([
+          api('/packages'),
+          api('/destinations'),
+          api('/vehicles'),
+          api('/hotels'),
+          api('/blogs'),
+        ]);
+        state.packages = packages;
+        state.destinations = destinations;
+        state.vehicles = vehicles;
+        state.hotels = hotels;
+        state.blogs = blogs;
+        renderLists();
+      }
+
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          const data = await api('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email: document.getElementById('email').value.trim(), password: document.getElementById('password').value }),
+          });
+          if (data.user.role !== 'admin') throw new Error('Only admin can access this panel');
+          token = data.token;
+          currentUser = data.user;
+          localStorage.setItem('iit_token', token);
+          localStorage.setItem('iit_user', JSON.stringify(currentUser));
+          showAdmin();
+          await refreshLists();
+          setMessage('Admin login successful');
+        } catch (err) {
+          setMessage(err.message, true);
+        }
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        token = '';
+        currentUser = null;
+        localStorage.removeItem('iit_token');
+        localStorage.removeItem('iit_user');
+        showLogin();
+        setMessage('Logged out');
+      });
+
+      document.getElementById('packageForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('pkgId').value;
+        try {
+          await api(id ? `/packages/${id}` : '/packages', {
+            method: id ? 'PUT' : 'POST',
+            body: JSON.stringify({
+              title: document.getElementById('pkgTitle').value.trim(),
+              slug: document.getElementById('pkgSlug').value.trim(),
+              description: document.getElementById('pkgDescription').value.trim(),
+              price: Number(document.getElementById('pkgPrice').value),
+              duration: document.getElementById('pkgDuration').value.trim(),
+              imageUrl: document.getElementById('pkgImageUrl').value.trim(),
+              destinations: toList(document.getElementById('pkgDestinations').value),
+              facilities: [],
+              startPoints: [],
+              endPoints: [],
+            }),
+          });
+          resetForm('package');
+          await refreshLists();
+          setMessage(id ? 'Package updated' : 'Package added');
+        } catch (err) {
+          setMessage(err.message, true);
+        }
+      });
+
+      document.getElementById('destinationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('destId').value;
+        try {
+          await api(id ? `/destinations/${id}` : '/destinations', {
+            method: id ? 'PUT' : 'POST',
+            body: JSON.stringify({
+              name: document.getElementById('destName').value.trim(),
+              slug: document.getElementById('destSlug').value.trim(),
+              state: document.getElementById('destState').value.trim(),
+              description: document.getElementById('destDescription').value.trim(),
+              bestTimeToVisit: document.getElementById('destBestTime').value.trim(),
+              attractions: toList(document.getElementById('destAttractions').value),
+              imageUrl: document.getElementById('destImageUrl').value.trim(),
+            }),
+          });
+          resetForm('destination');
+          await refreshLists();
+          setMessage(id ? 'Destination updated' : 'Destination added');
+        } catch (err) {
+          setMessage(err.message, true);
+        }
+      });
+
+      document.getElementById('vehicleForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('vehicleId').value;
+        try {
+          await api(id ? `/vehicles/${id}` : '/vehicles', {
+            method: id ? 'PATCH' : 'POST',
+            body: JSON.stringify({
+              name: document.getElementById('vehicleName').value.trim(),
+              type: document.getElementById('vehicleType').value,
+              capacity: Number(document.getElementById('vehicleCapacity').value),
+              pricePerKm: Number(document.getElementById('vehiclePricePerKm').value),
+              basePrice: Number(document.getElementById('vehicleBasePrice').value),
+              imageUrl: document.getElementById('vehicleImageUrl').value.trim(),
+              isAvailable: document.getElementById('vehicleIsAvailable').checked,
+            }),
+          });
+          resetForm('vehicle');
+          document.getElementById('vehicleIsAvailable').checked = true;
+          await refreshLists();
+          setMessage(id ? 'Vehicle updated' : 'Vehicle added');
+        } catch (err) {
+          setMessage(err.message, true);
+        }
+      });
+
+      document.getElementById('hotelForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('hotelId').value;
+        try {
+          await api(id ? `/hotels/${id}` : '/hotels', {
+            method: id ? 'PATCH' : 'POST',
+            body: JSON.stringify({
+              name: document.getElementById('hotelName').value.trim(),
+              location: document.getElementById('hotelLocation').value.trim(),
+              description: document.getElementById('hotelDescription').value.trim(),
+              rating: Number(document.getElementById('hotelRating').value) || 4,
+              pricePerNight: Number(document.getElementById('hotelPricePerNight').value),
+              amenities: toList(document.getElementById('hotelAmenities').value),
+              roomTypes: toRoomTypes(document.getElementById('hotelRoomTypes').value),
+              imageUrl: document.getElementById('hotelImageUrl').value.trim(),
+              website: document.getElementById('hotelWebsite').value.trim(),
+              isAvailable: document.getElementById('hotelIsAvailable').checked,
+            }),
+          });
+          resetForm('hotel');
+          document.getElementById('hotelIsAvailable').checked = true;
+          await refreshLists();
+          setMessage(id ? 'Hotel updated' : 'Hotel added');
+        } catch (err) {
+          setMessage(err.message, true);
+        }
+      });
+
+      document.getElementById('blogForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('blogId').value;
+        try {
+          await api(id ? `/blogs/${id}` : '/blogs', {
+            method: id ? 'PUT' : 'POST',
+            body: JSON.stringify({
+              title: document.getElementById('blogTitle').value.trim(),
+              slug: document.getElementById('blogSlug').value.trim(),
+              excerpt: document.getElementById('blogExcerpt').value.trim(),
+              content: document.getElementById('blogContent').value.trim(),
+              tags: toList(document.getElementById('blogTags').value),
+              heroImageUrl: document.getElementById('blogHeroImageUrl').value.trim(),
+            }),
+          });
+          resetForm('blog');
+          await refreshLists();
+          setMessage(id ? 'Blog updated' : 'Blog added');
+        } catch (err) {
+          setMessage(err.message, true);
+        }
+      });
+
+      document.getElementById('pkgCancel').addEventListener('click', () => resetForm('package'));
+      document.getElementById('destCancel').addEventListener('click', () => resetForm('destination'));
+      document.getElementById('vehicleCancel').addEventListener('click', () => {
+        resetForm('vehicle');
+        document.getElementById('vehicleIsAvailable').checked = true;
+      });
+      document.getElementById('hotelCancel').addEventListener('click', () => {
+        resetForm('hotel');
+        document.getElementById('hotelIsAvailable').checked = true;
+      });
+      document.getElementById('blogCancel').addEventListener('click', () => resetForm('blog'));
+
+      document.addEventListener('click', async (e) => {
+        if (!e.target.matches('button[data-action]')) return;
+        const { id, type, action } = e.target.dataset;
+
+        if (action === 'edit') {
+          const item = (state[`${type}s`] || []).find((entry) => entry._id === id);
+          if (!item) return;
+          if (type === 'package') {
+            document.getElementById('pkgId').value = item._id;
+            document.getElementById('pkgTitle').value = item.title || '';
+            document.getElementById('pkgSlug').value = item.slug || '';
+            document.getElementById('pkgDescription').value = item.description || '';
+            document.getElementById('pkgPrice').value = item.price || 0;
+            document.getElementById('pkgDuration').value = item.duration || '';
+            document.getElementById('pkgImageUrl').value = item.imageUrl || '';
+            document.getElementById('pkgDestinations').value = (item.destinations || []).join(',');
+          } else if (type === 'destination') {
+            document.getElementById('destId').value = item._id;
+            document.getElementById('destName').value = item.name || '';
+            document.getElementById('destSlug').value = item.slug || '';
+            document.getElementById('destState').value = item.state || '';
+            document.getElementById('destDescription').value = item.description || '';
+            document.getElementById('destBestTime').value = item.bestTimeToVisit || '';
+            document.getElementById('destAttractions').value = (item.attractions || []).join(',');
+            document.getElementById('destImageUrl').value = item.imageUrl || '';
+          } else if (type === 'vehicle') {
+            document.getElementById('vehicleId').value = item._id;
+            document.getElementById('vehicleName').value = item.name || '';
+            document.getElementById('vehicleType').value = item.type || 'Sedan';
+            document.getElementById('vehicleCapacity').value = item.capacity || 0;
+            document.getElementById('vehiclePricePerKm').value = item.pricePerKm || 0;
+            document.getElementById('vehicleBasePrice').value = item.basePrice || 0;
+            document.getElementById('vehicleImageUrl').value = item.imageUrl || '';
+            document.getElementById('vehicleIsAvailable').checked = !!item.isAvailable;
+          } else if (type === 'hotel') {
+            document.getElementById('hotelId').value = item._id;
+            document.getElementById('hotelName').value = item.name || '';
+            document.getElementById('hotelLocation').value = item.location || '';
+            document.getElementById('hotelDescription').value = item.description || '';
+            document.getElementById('hotelRating').value = item.rating || 4;
+            document.getElementById('hotelPricePerNight').value = item.pricePerNight || 0;
+            document.getElementById('hotelAmenities').value = (item.amenities || []).join(',');
+            document.getElementById('hotelRoomTypes').value = roomTypesToInput(item.roomTypes);
+            document.getElementById('hotelImageUrl').value = item.imageUrl || '';
+            document.getElementById('hotelWebsite').value = item.website || '';
+            document.getElementById('hotelIsAvailable').checked = !!item.isAvailable;
+          } else if (type === 'blog') {
+            document.getElementById('blogId').value = item._id;
+            document.getElementById('blogTitle').value = item.title || '';
+            document.getElementById('blogSlug').value = item.slug || '';
+            document.getElementById('blogExcerpt').value = item.excerpt || '';
+            document.getElementById('blogContent').value = item.content || '';
+            document.getElementById('blogTags').value = (item.tags || []).join(',');
+            document.getElementById('blogHeroImageUrl').value = item.heroImageUrl || '';
+          }
+          setMessage(`${type} loaded for edit`);
+          return;
+        }
+
+        if (action === 'delete') {
+          if (!confirm('Delete this item?')) return;
+          try {
+            const routes = { package: '/packages', destination: '/destinations', vehicle: '/vehicles', hotel: '/hotels', blog: '/blogs' };
+            await api(`${routes[type]}/${id}`, { method: 'DELETE' });
+            await refreshLists();
+            setMessage(`${type} deleted`);
+          } catch (err) {
+            setMessage(err.message, true);
+          }
+        }
+      });
+
+      async function bootstrap() {
+        if (token && currentUser && currentUser.role === 'admin') {
+          showAdmin();
+          try {
+            await refreshLists();
+          } catch (err) {
+            setMessage(err.message, true);
+          }
+        } else {
+          showLogin();
+        }
+      }
+
+      bootstrap();
+    </script>
+  </body>
+</html>
