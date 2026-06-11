@@ -75,7 +75,7 @@
 <script src="https://cdn.jsdelivr.net/npm/react-router-dom@6/umd/react-router-dom.production.min.js"></script>
 
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEzyD6lkDNlzVUERvH81RmqKGJ7ryBnKXog9OucVVqQKq8870t27SvrdNZeXMQpNyoG/UX34g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <body class="bg-slate-900 text-slate-50">
     <div id="root"></div>
@@ -1666,6 +1666,34 @@
 
       function BookingForm({ selectedPackageId }) {
         const api = useApi();
+        const SERVICE_CITIES = [
+          'Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad',
+          'Ahmedabad', 'Jaipur', 'Pune', 'Goa', 'Lucknow', 'Varanasi'
+        ];
+        const DISTANCE_RATE_PER_KM = 18;
+        const ROUTE_DISTANCES = {
+          'agra|delhi': 230,
+          'ahmedabad|udaipur': 260,
+          'bangalore|chennai': 345,
+          'bangalore|hyderabad': 570,
+          'chennai|pune': 1180,
+          'darjeeling|kolkata': 630,
+          'delhi|jaipur': 280,
+          'delhi|mumbai': 1400,
+          'goa|hyderabad': 660,
+          'goa|mumbai': 590,
+          'lucknow|varanasi': 320,
+          'mumbai|pune': 150
+        };
+
+        const getDistanceKm = (from, to) => {
+          if (!from || !to) return 0;
+          const key = [from.trim(), to.trim()].sort().join('|');
+          if (ROUTE_DISTANCES[key]) return ROUTE_DISTANCES[key];
+          if (from.trim().toLowerCase() === to.trim().toLowerCase()) return 20;
+          return 250;
+        };
+
         const [packages, setPackages] = React.useState([]);
         const [hotels, setHotels] = React.useState([]);
         const [vehicles, setVehicles] = React.useState([]);
@@ -1732,6 +1760,14 @@
           [packages, form.packageId]
         );
 
+        const availableCitySuggestions = React.useMemo(() => {
+          const packageCities = [
+            ...(currentPackage?.startPoints?.map(p => p.location) || []),
+            ...(currentPackage?.endPoints?.map(p => p.location) || [])
+          ];
+          return Array.from(new Set([...SERVICE_CITIES, ...packageCities]));
+        }, [currentPackage]);
+
         React.useEffect(() => {
           if (!currentPackage) {
             setTotalPrice(0);
@@ -1745,6 +1781,9 @@
 
           const ep = currentPackage.endPoints?.find(p => p.location === form.endPoint);
           if (ep) price += ep.additionalCost;
+
+          const distanceKm = getDistanceKm(form.startPoint, form.endPoint);
+          price += distanceKm * DISTANCE_RATE_PER_KM;
 
           const v = vehicles.find(v => v._id === form.vehicleId);
           if (v) price += v.basePrice;
@@ -1859,24 +1898,32 @@
                   <div className="grid sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-900/50 border border-slate-800">
                     <div>
                       <label className="block text-xs font-medium text-slate-200 mb-1">Starting Point</label>
-                      <select name="startPoint" required value={form.startPoint} onChange={handleChange}
-                        className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100">
-                        <option value="">Select Start Point</option>
-                        {currentPackage.startPoints?.map(p => (
-                          <option key={p.location} value={p.location}>{p.location} (+₹{p.additionalCost})</option>
+                      <input list="start-cities" name="startPoint" required value={form.startPoint} onChange={handleChange}
+                        placeholder="Type or select a start city"
+                        className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                      <datalist id="start-cities">
+                        {availableCitySuggestions.map(city => (
+                          <option key={`start-${city}`} value={city} />
                         ))}
-                      </select>
+                      </datalist>
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-slate-200 mb-1">End Point</label>
-                      <select name="endPoint" required value={form.endPoint} onChange={handleChange}
-                        className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100">
-                        <option value="">Select End Point</option>
-                        {currentPackage.endPoints?.map(p => (
-                          <option key={p.location} value={p.location}>{p.location} (+₹{p.additionalCost})</option>
+                      <input list="end-cities" name="endPoint" required value={form.endPoint} onChange={handleChange}
+                        placeholder="Type or select an end city"
+                        className="w-full rounded-xl bg-slate-950/70 border-slate-700 text-sm text-slate-100" />
+                      <datalist id="end-cities">
+                        {availableCitySuggestions.map(city => (
+                          <option key={`end-${city}`} value={city} />
                         ))}
-                      </select>
+                      </datalist>
                     </div>
+                  </div>
+                )}
+                {currentPackage && (
+                  <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4 text-slate-300 text-sm">
+                    <p className="font-semibold text-slate-100 mb-2">Bus service available from</p>
+                    <p>{SERVICE_CITIES.join(', ')}</p>
                   </div>
                 )}
 
@@ -3101,33 +3148,41 @@
                 </p>
               </div>
               <div className="flex flex-col sm:items-end gap-2">
-                <div className="flex gap-3">
+                <div className="flex gap-4">
                   <a
                     href="https://www.facebook.com"
                     target="_blank"
                     rel="noopener"
-                    className="hover:text-slate-200"
+                    className="hover:text-slate-200 transition"
                     aria-label="Facebook"
                   >
-                    Facebook
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5c-.563-.096-1.496-.14-2.955-.14-3.537 0-5.993 2.268-5.993 6.441V8z" />
+                    </svg>
                   </a>
                   <a
                     href="https://www.instagram.com"
                     target="_blank"
                     rel="noopener"
-                    className="hover:text-slate-200"
+                    className="hover:text-slate-200 transition"
                     aria-label="Instagram"
                   >
-                    Instagram
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" strokeWidth="2"/>
+                      <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" fill="none" stroke="currentColor" strokeWidth="2"/>
+                      <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" />
+                    </svg>
                   </a>
                   <a
                     href="https://www.youtube.com"
                     target="_blank"
                     rel="noopener"
-                    className="hover:text-slate-200"
+                    className="hover:text-slate-200 transition"
                     aria-label="YouTube"
                   >
-                    YouTube
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                    </svg>
                   </a>
                 </div>
                 <p>© {new Date().getFullYear()} Start2Go. All rights reserved.</p>

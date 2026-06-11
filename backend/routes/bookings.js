@@ -6,9 +6,38 @@ const Hotel = require('../models/Hotel');
 const { auth } = require('../middleware/auth');
 const { sendBookingNotifications } = require('../services/notificationService');
 
+const SERVICE_CITIES = [
+  'Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad',
+  'Ahmedabad', 'Jaipur', 'Pune', 'Goa', 'Lucknow', 'Varanasi'
+];
+const DISTANCE_RATE_PER_KM = 18;
+const ROUTE_DISTANCE_KM = {
+  'agra|delhi': 230,
+  'ahmedabad|udaipur': 260,
+  'bangalore|chennai': 345,
+  'bangalore|hyderabad': 570,
+  'chennai|pune': 1180,
+  'darjeeling|kolkata': 630,
+  'delhi|jaipur': 280,
+  'delhi|mumbai': 1400,
+  'goa|hyderabad': 660,
+  'goa|mumbai': 590,
+  'lucknow|varanasi': 320,
+  'mumbai|pune': 150
+};
+
+const normalizeCityKey = (a, b) => [a.trim().toLowerCase(), b.trim().toLowerCase()].sort().join('|');
+const getDistanceKm = (from, to) => {
+  if (!from || !to) return 0;
+  const key = normalizeCityKey(from, to);
+  if (ROUTE_DISTANCE_KM[key]) return ROUTE_DISTANCE_KM[key];
+  if (from.trim().toLowerCase() === to.trim().toLowerCase()) return 20;
+  return 250;
+};
+
 const router = express.Router();
 
-router.post('/', auth, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const {
       name,
@@ -46,7 +75,11 @@ router.post('/', auth, async (req, res) => {
       calculatedPrice += endPointData.additionalCost;
     }
 
-    // 4. Add Vehicle cost
+    // 4. Distance-based bus fare
+    const distanceKm = getDistanceKm(startPoint, endPoint);
+    calculatedPrice += distanceKm * DISTANCE_RATE_PER_KM;
+
+    // 5. Add Vehicle cost
     if (vehicleId) {
       const vehicle = await Vehicle.findById(vehicleId);
       if (vehicle && vehicle.isAvailable) {
@@ -78,7 +111,6 @@ router.post('/', auth, async (req, res) => {
       travelDate,
       packageId,
       notes,
-      userId: req.user.id,
       vehicleId,
       hotelSelection,
       startPoint,
